@@ -1,0 +1,11 @@
+{
+  "projectName": "stack-switchboard",
+  "vcsURL": "https://github.com/guardian/stack-switchboard",
+  "actions": [
+    {
+      "action": "switchboard",
+      "path": "dist",
+      "compress": "zip"
+    }
+  ]
+}
