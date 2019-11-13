@@ -1,13 +1,17 @@
 import express from "express";
 import awsServerlessExpress from "aws-serverless-express";
 import { Handler } from "aws-lambda";
+import path from "path";
 
 const app = express();
 
 const port = process.env.PORT || 3000;
 
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "/views"));
+
 app.get("/", (req, res) => {
-  res.send("Hello, world!");
+  res.render("index", { title: "Hey", message: "Hello there!" });
 });
 
 export const handler: Handler = (event, context) => {
