@@ -27,7 +27,7 @@ export class CdkStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_10_X,
       code: lambda.Code.fromBucket(
         deployBucket,
-        `${stackParameter.valueAsString}/${stageParameter.valueAsString}/backend/backend.zip`
+        `${stackParameter.valueAsString}/${stageParameter.valueAsString}/switchboard/switchboard.zip`
       ),
       description: ""
     });
