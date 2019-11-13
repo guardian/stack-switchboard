@@ -9,7 +9,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "compile": "yarn build && yarn cdk synth > cloudformation.yaml && cp cloudformation.yaml ../cloudformation.yaml"
+    "compile": "yarn build && yarn cdk synth > cloudformation.yaml"
   },
   "devDependencies": {
     "@aws-cdk/assert": "^1.16.2",
