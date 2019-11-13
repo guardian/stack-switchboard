@@ -13,6 +13,9 @@
   },
   "devDependencies": {
     "@aws-cdk/assert": "^1.16.2",
+    "@aws-cdk/core": "^1.16.2",
+    "@aws-cdk/aws-lambda": "latest",
+    "@aws-cdk/aws-apigateway": "latest",
     "@types/jest": "^24.0.22",
     "@types/node": "10.17.5",
     "jest": "^24.9.0",
@@ -22,9 +25,6 @@
     "typescript": "~3.7.2"
   },
   "dependencies": {
-    "@aws-cdk/core": "^1.16.2",
-    "source-map-support": "^0.5.16",
-    "@aws-cdk/aws-lambda": "latest",
-    "@aws-cdk/aws-apigateway": "latest"
+    "source-map-support": "^0.5.16"
   }
 }
