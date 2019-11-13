@@ -9,11 +9,11 @@ deployments:
       bucket: stack-switchboard
       fileName: switchboard.zip
       functionNames: [stack-switchboard-]
-    cloudformation:
-      type: cloud-formation
-      app: stack-switchboard
-      parameters:
-        prependStackToCloudFormationStackName: false
-        cloudFormationStackName: stack-switchboard
-        templatePath: cloudformation.yaml
-        cloudFormationStackByTags: false
+  cloudformation:
+    type: cloud-formation
+    app: stack-switchboard
+    parameters:
+      prependStackToCloudFormationStackName: false
+      cloudFormationStackName: stack-switchboard
+      templatePath: cloudformation.yaml
+      cloudFormationStackByTags: false
