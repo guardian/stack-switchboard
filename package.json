@@ -14,9 +14,10 @@
     "@guardian/node-riffraff-artifact": "0.0.15",
     "@types/aws-serverless-express": "^3.3.1",
     "@types/express": "^4.17.2",
+    "@aws-cdk/aws-lambda": "latest",
+    "@aws-cdk/core": "^1.16.2",
     "ts-node-dev": "^1.0.0-pre.44",
-    "typescript": "^3.7.2",
-    "ncc": "^0.3.6"
+    "typescript": "^3.7.2"
   },
   "dependencies": {
     "aws-serverless-express": "^3.3.6",
