@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@aws-cdk/assert": "^1.16.2",
     "@aws-cdk/aws-lambda": "latest",
     "@aws-cdk/core": "^1.16.2",
     "@guardian/node-riffraff-artifact": "0.0.15",
