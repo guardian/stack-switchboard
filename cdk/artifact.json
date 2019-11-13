@@ -6,6 +6,11 @@
       "action": "switchboard",
       "path": "dist",
       "compress": "zip"
+    },
+    {
+      "action": "cloudformation",
+      "path": "cloudformation.yaml",
+      "compress": false
     }
   ]
 }
