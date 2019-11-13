@@ -23,6 +23,7 @@ export class CdkStack extends cdk.Stack {
     });
 
     new lambda.Function(this, "stack-switchboard-dev", {
+      functionName: `stack-switchboard-${stageParameter.valueAsString}`,
       handler: "index.handler",
       runtime: lambda.Runtime.NODEJS_10_X,
       code: lambda.Code.fromBucket(
