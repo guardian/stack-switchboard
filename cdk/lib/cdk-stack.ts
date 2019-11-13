@@ -1,6 +1,7 @@
 import cdk = require("@aws-cdk/core");
 import lambda = require("@aws-cdk/aws-lambda");
 import s3 = require("@aws-cdk/aws-s3");
+import apigateway = require("@aws-cdk/aws-apigateway");
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -22,15 +23,23 @@ export class CdkStack extends cdk.Stack {
       description: "Stage"
     });
 
-    new lambda.Function(this, "stack-switchboard-dev", {
-      functionName: `stack-switchboard-${stageParameter.valueAsString}`,
-      handler: "index.handler",
-      runtime: lambda.Runtime.NODEJS_10_X,
-      code: lambda.Code.fromBucket(
-        deployBucket,
-        `${stackParameter.valueAsString}/${stageParameter.valueAsString}/switchboard/switchboard.zip`
-      ),
-      description: ""
+    const switchboardLambda = new lambda.Function(
+      this,
+      "stack-switchboard-dev",
+      {
+        functionName: `stack-switchboard-${stageParameter.valueAsString}`,
+        handler: "index.handler",
+        runtime: lambda.Runtime.NODEJS_10_X,
+        code: lambda.Code.fromBucket(
+          deployBucket,
+          `${stackParameter.valueAsString}/${stageParameter.valueAsString}/switchboard/switchboard.zip`
+        ),
+        description: "Switchboard for controlling CODE & secondary resources"
+      }
+    );
+
+    new apigateway.LambdaRestApi(this, "stack-switchboard-api", {
+      handler: switchboardLambda
     });
   }
 }
