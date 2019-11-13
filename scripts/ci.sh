@@ -2,16 +2,23 @@
 
 set -ex
 
+function cleanup() {
+    rm -rf node_modules dist cdk/node_modules
+}
 
-npm install
-npm install -g @zeit/ncc
-npm install -g aws-cdk
+function build-app() {
+    npm install
+    npm run build
+}
 
-npm run build
+function build-resources() {
+    cd cdk
+    npm install
+    npm run compile
+    cp -R ../dist ./
+    npx @guardian/node-riffraff-artifact
+}
 
-cd cdk
-npm install
-npm run compile
-cp -R ../dist ./
-
-npx @guardian/node-riffraff-artifact
+cleanup
+build-app
+build-resources

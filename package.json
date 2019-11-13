@@ -19,6 +19,7 @@
     "@types/aws-serverless-express": "^3.3.1",
     "@types/express": "^4.17.2",
     "@types/jest": "^24.0.23",
+    "@zeit/ncc": "^0.20.5",
     "aws-cdk": "^1.16.2",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.7.2"
