@@ -1,3 +1,41 @@
-<h1>Hello there!</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-<h3>We all float down here.</h3>
+<head>
+    <meta charset="utf-8">
+    <title><%= title %></title>
+    <meta name="author" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/styles.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<h1><%= message %></h1>
+
+<table style="width:100%">
+    <tr>
+        <th>Stack Name</th>
+        <th>Description</th>
+        <th>Stack Drift Status</th>
+        <th>ON/OFF</th>
+    </tr>
+
+<% for (const stack of stacks) { %>
+    <%= console.log(stack) %>
+
+        <tr>
+            <td><%= stack.StackName %></td>
+            <td><%= stack.TemplateDescription %></td>
+            <td><%= stack.DriftInformation.StackDriftStatus %></td>
+            <td><button onclick="console.log('Dope!')">Click me to turn off</button></td>
+        </tr>
+<% } %>
+</table>
+
+
+</body>
+
+</html>
