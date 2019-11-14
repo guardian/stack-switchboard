@@ -14,13 +14,12 @@ app.get("/", (req, res) => {
   res.render("index", { title: "Hey", message: "Hello there!" });
 });
 
-export const handler: Handler = (event, context) => {
+export const handler: Handler = (event, context) =>
   awsServerlessExpress.proxy(
     awsServerlessExpress.createServer(app),
     event,
     context
   );
-};
 
 if (require.main === module) {
   app.listen(port, () => {

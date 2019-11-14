@@ -13,14 +13,15 @@
   },
   "devDependencies": {
     "@aws-cdk/assert": "^1.16.2",
-    "@aws-cdk/core": "^1.16.2",
-    "@aws-cdk/aws-lambda": "latest",
     "@aws-cdk/aws-apigateway": "latest",
+    "@aws-cdk/aws-iam": "^1.16.2",
+    "@aws-cdk/aws-lambda": "latest",
+    "@aws-cdk/core": "^1.16.2",
     "@types/jest": "^24.0.22",
     "@types/node": "10.17.5",
+    "aws-cdk": "^1.16.2",
     "jest": "^24.9.0",
     "ts-jest": "^24.1.0",
-    "aws-cdk": "^1.16.2",
     "ts-node": "^8.1.0",
     "typescript": "~3.7.2"
   },

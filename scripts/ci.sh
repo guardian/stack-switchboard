@@ -7,8 +7,10 @@ function cleanup() {
 }
 
 function build-app() {
+    cd app
     npm install
     npm run build
+    cd -
 }
 
 function build-resources() {
