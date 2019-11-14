@@ -1,7 +1,7 @@
 import express from "express";
 import awsServerlessExpress from "aws-serverless-express";
-import { Handler } from "aws-lambda";
 import path from "path";
+import { getStacks } from "./utils/stackController";
 
 const app = express();
 
@@ -9,23 +9,27 @@ const port = process.env.PORT || 3000;
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
+app.use(express.static(__dirname + "/public"));
 
-app.get("/", (req, res) => {
-  res.render("index", { title: "Hey", message: "Hello there!" });
-});
-
-export const handler: Handler = (event, context) =>
+// TODO: Work out what to put instead of 'any'
+export const handler = (event: any, context: any) =>
   awsServerlessExpress.proxy(
     awsServerlessExpress.createServer(app),
     event,
     context
   );
 
+app.get("/", async (req, res) => {
+  const stacks = await getStacks();
+  res.render("index", {
+    title: "Stack Switchboard",
+    message: "Stack Switchboard",
+    stacks
+  });
+});
+
 if (require.main === module) {
   app.listen(port, () => {
     console.log(`Stack-switchboard backend listening on port ${port}!`);
-    console.log(
-      "Stack-switchboard backend endpoints list available at root path"
-    );
   });
 }

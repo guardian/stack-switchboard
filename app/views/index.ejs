@@ -1,3 +1,47 @@
-<h1>Hello there!</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-<h3>We all float down here.</h3>
+<head>
+    <meta charset="utf-8">
+    <title><%= title %></title>
+    <meta name="author" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link href="css/styles.css" rel="stylesheet">
+
+</head>
+
+<body>
+<div class="">
+<h1 style="text-align: center"><%= message %></h1>
+
+    <table class="table table-responsive-lg table-dark table-striped table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Stack Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Drift Status</th>
+            <th scope="col">Switch</th>
+            <th scope="col">ASG Desired Amount</th>
+        </tr>
+        </thead>
+
+        <tbody>
+    <% for (const stack of stacks) { %>
+            <tr>
+                <td><%= stack.StackName %></td>
+                <td><%= stack.TemplateDescription %></td>
+                <td><%= stack.DriftInformation.StackDriftStatus %></td>
+                <td><button class="btn" onclick="console.log('Dope!')">Click me to turn off</button></td>
+                <td>TBC</td>
+            </tr>
+    <% } %>
+        </tbody>
+    </table>
+
+</div>
+</body>
+
+</html>
