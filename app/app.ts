@@ -1,7 +1,7 @@
 import express from "express";
 import awsServerlessExpress from "aws-serverless-express";
 import path from "path";
-import { getStacks } from "./utils/stackController";
+import { fetchSwitchboardData } from "./utils/stackController";
 
 const app = express();
 
@@ -20,7 +20,7 @@ export const handler = (event: any, context: any) =>
   );
 
 app.get("/", async (req, res) => {
-  const stacks = await getStacks();
+  const stacks = await fetchSwitchboardData();
   res.render("index", {
     title: "Stack Switchboard",
     message: "Stack Switchboard",
