@@ -10,28 +10,48 @@ interface Stack {
   StackName: String;
 }
 
-function compare(a: Stack, b: Stack) {
-  if (a.StackName < b.StackName) {
+function byStackName(a: Stack, b: Stack) {
+  const stackA: String = a.StackName.toLowerCase();
+  const stackB: String = b.StackName.toLowerCase();
+  if (stackA < stackB) {
     return -1;
-  }
-  if (a.StackName > b.StackName) {
+  } else if (stackA > stackB) {
     return 1;
   }
   return 0;
 }
 
-export const getStacks = async () => {
+function nonProdStacks() {
+  return (stack: Stack) =>
+    stack.StackName.includes("CODE") ||
+    stack.StackName.includes("DEV") ||
+    stack.StackName.includes("TEST");
+}
+
+const queryCloudFormation = async (NextToken?: string) => {
   return await cloudFormation
-    .listStacks({
-      StackStatusFilter: ["CREATE_COMPLETE"]
-    })
+    .listStacks({ NextToken })
     .promise()
     .then(data => {
       if (data.StackSummaries) {
-        return data.StackSummaries.sort(compare);
+        return {
+          stacks: data.StackSummaries,
+          NextToken: data.NextToken
+        };
       } else {
-        throw new Error("StackSummaries missing");
+        throw Error("StackSummaries missing");
       }
     })
     .catch(err => err);
+};
+
+export const getStacks = async () => {
+  let stacks: Stack[] = [];
+  let response = await queryCloudFormation().then(async res => res);
+  stacks = stacks.concat(response.stacks);
+  while (response.NextToken) {
+    response = await queryCloudFormation(response.NextToken).then(res => res);
+    stacks = stacks.concat(response.stacks);
+  }
+  return stacks.filter(nonProdStacks()).sort(byStackName);
 };
