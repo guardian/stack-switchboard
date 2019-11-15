@@ -1,8 +1,5 @@
-/*html {*/
-/*    background-color: black;*/
-/*    color: white;*/
-/*}*/
-
-/*body {*/
-/*    font-family: Arial, serif;*/
-/*}*/
+html, body {
+    background-color: #21252a;
+    color: white;
+    font-family: Arial, serif;
+}

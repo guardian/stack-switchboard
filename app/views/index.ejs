@@ -14,30 +14,34 @@
 </head>
 
 <body>
+<div class="">
+<h1 style="text-align: center"><%= message %></h1>
 
-<h1><%= message %></h1>
-
-<table style="width:100%" class="table">
-    <tr>
-        <th>Stack Name</th>
-        <th>Description</th>
-        <th>Stack Status</th>
-        <th>Drift Status</th>
-        <th>ON/OFF</th>
-    </tr>
-
-<% for (const stack of stacks) { %>
+    <table class="table table-responsive-lg table-dark table-striped table-hover">
+        <thead>
         <tr>
-            <td><%= stack.StackName %></td>
-            <td><%= stack.TemplateDescription %></td>
-            <td><%= stack.StackStatus %></td>
-            <td><%= stack.DriftInformation.StackDriftStatus %></td>
-            <td><button onclick="console.log('Dope!')">Click me to turn off</button></td>
+            <th scope="col">Stack Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Drift Status</th>
+            <th scope="col">Switch</th>
+            <th scope="col">ASG Desired Amount</th>
         </tr>
-<% } %>
-</table>
+        </thead>
 
+        <tbody>
+    <% for (const stack of stacks) { %>
+            <tr>
+                <td><%= stack.StackName %></td>
+                <td><%= stack.TemplateDescription %></td>
+                <td><%= stack.DriftInformation.StackDriftStatus %></td>
+                <td><button class="btn" onclick="console.log('Dope!')">Click me to turn off</button></td>
+                <td>TBC</td>
+            </tr>
+    <% } %>
+        </tbody>
+    </table>
 
+</div>
 </body>
 
 </html>
