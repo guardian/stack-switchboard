@@ -20,30 +20,32 @@
     <table class="table table-responsive-lg table-dark table-striped table-hover">
         <thead>
         <tr>
-            <th scope="col">Stack Name</th>
-            <th scope="col">Description</th>
-            <th scope="col">Drift Status</th>
+            <th scope="col">ASG Name</th>
+            <th scope="col">ARN</th>
+            <th scope="col">Tags</th>
             <th scope="col">Switch</th>
             <th scope="col" class="th-md">ASG Desired Amount</th>
         </tr>
         </thead>
 
         <tbody>
-    <% for (const stack of stacks) { %>
+    <% for (const group of groups) { %>
             <tr>
-                <td><%= stack.stack.StackName %></td>
-                <td><%= stack.stack.TemplateDescription %></td>
-                <td><%= stack.stack.DriftInformation.StackDriftStatus %></td>
-                <td><button class="btn btn-warning" onclick="console.log('Dope!')">Scale down</button></td>
+                <td style="min-width: 20%; font-weight: bold; font-size: 120%"><%= group.AutoScalingGroupName %></td>
+                <td style=""><%= group.AutoScalingGroupARN %></td>
+                <td style="width: 10%"><%= JSON.stringify(group.Tags) %></td>
+                <td style="min-width: 5%"><button class="btn btn-warning" onclick="console.log('Dope!')">Scale down</button></td>
                 <td>
-                    <% for (const asg of stack.autoScalingGroups) { %>
+                    <div></div>
+                    <div>MinSize: <%= group.MinSize %></div>
+                    <% if (group.DesiredCapacity === group.MinSize) { %>
+                        <div style="color: lightgreen">Desired: <%= group.DesiredCapacity %></div>
+                    <% } else { %>
+                        <div style="color: palevioletred">Desired: <%= group.DesiredCapacity %></div>
 
-                        <div><%= asg.autoScalingGroupName %></div>
-                        <div>MinSize: <%= asg.MinSize %></div>
-                        <div>Desired: <%= asg.DesiredCapacity %></div>
-                        <div>MaxSize: <%= asg.MaxSize %></div>
-                        <br/>
                     <% } %>
+                    <div>MaxSize: <%= group.MaxSize %></div>
+                <br/>
 
                 </td>
             </tr>

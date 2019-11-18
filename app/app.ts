@@ -20,14 +20,14 @@ export const handler = (event: any, context: any) =>
   );
 
 app.get("/", async (req, res) => {
-  const stacks = await fetchSwitchboardData().catch(err => {
+  const groups = await fetchSwitchboardData().catch(err => {
     console.error("fetchSwitchboard data broke: ", err);
     throw new Error(err);
   });
   res.render("index", {
     title: "Stack Switchboard",
     message: "Stack Switchboard",
-    stacks
+    groups
   });
 });
 
