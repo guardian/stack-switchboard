@@ -20,10 +20,13 @@ export const handler = (event: any, context: any) =>
   );
 
 app.get("/", async (req, res) => {
-  const groups = await fetchSwitchboardData().catch(err => {
-    console.error("fetchSwitchboard data broke: ", err);
-    throw new Error(err);
-  });
+  let groups: any[];
+  try {
+    groups = await fetchSwitchboardData();
+  } catch (err) {
+    console.error(err);
+    groups = [];
+  }
   res.render("index", {
     title: "Stack Switchboard",
     message: "Stack Switchboard",

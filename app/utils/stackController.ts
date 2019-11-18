@@ -1,16 +1,16 @@
 import AWS, { AutoScaling } from "aws-sdk";
-import { Stack } from "./interfaces";
+import { EnrichedAutoScalingGroup, Stack } from "./interfaces";
 
 const params = {
   region: "eu-west-1"
 };
 
-function byStackName(
-  a: AutoScaling.AutoScalingGroup,
-  b: AutoScaling.AutoScalingGroup
+function alphabeticallyByStackName(
+  a: EnrichedAutoScalingGroup,
+  b: EnrichedAutoScalingGroup
 ): number {
-  const groupA: string = a.AutoScalingGroupName.toLowerCase();
-  const groupB: string = b.AutoScalingGroupName.toLowerCase();
+  const groupA: string = a.tags.stack.toLowerCase();
+  const groupB: string = b.tags.stack.toLowerCase();
   if (groupA < groupB) {
     return -1;
   } else if (groupA > groupB) {
@@ -37,23 +37,36 @@ const getAutoScalingGroupState = async (): Promise<
     .then(
       (response: AutoScaling.AutoScalingGroupsType) =>
         response.AutoScalingGroups
-    )
-    .catch(err => {
-      console.error(err);
-      return err;
-    });
+    );
 };
 
+const hasValue = (
+  tag: AutoScaling.Tag
+): tag is { Key: string; Value: string } => {
+  return !!tag.Value;
+};
+
+function desiredTags(tags: AutoScaling.Tags): { stack: string; stage: string } {
+  const selectedTags = tags
+    .filter(tag => (tag.Value && tag.Key === "Stack") || tag.Key === "Stage")
+    .filter(hasValue);
+  return {
+    stack: selectedTags.filter(tag => tag.Key === "Stack")[0].Value,
+    stage: selectedTags.filter(tag => tag.Key === "Stage")[0].Value
+  };
+}
+
 export const fetchSwitchboardData = async () => {
-  const autoscalingGroups: AutoScaling.AutoScalingGroup[] = await getAutoScalingGroupState()
-    .then((groups: AutoScaling.AutoScalingGroup[]) =>
-      groups.filter(desiredGroups).sort(byStackName)
-    )
-    .catch(err => {
-      throw new Error(err);
-    });
-  console.log(autoscalingGroups.length);
-  return autoscalingGroups;
+  const autoscalingGroups = await getAutoScalingGroupState();
+  return autoscalingGroups
+    .filter(desiredGroups())
+    .map((group: AutoScaling.AutoScalingGroup) => {
+      return {
+        group,
+        tags: desiredTags(group.Tags as AutoScaling.Tags)
+      };
+    })
+    .sort(alphabeticallyByStackName);
 };
 
 module.exports = { fetchSwitchboardData };

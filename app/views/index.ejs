@@ -19,37 +19,38 @@
 
     <table class="table table-responsive-lg table-dark table-striped table-hover">
         <thead>
-        <tr>
-            <th scope="col">ASG Name</th>
-            <th scope="col">ARN</th>
-            <th scope="col">Tags</th>
-            <th scope="col">Switch</th>
-            <th scope="col" class="th-md">ASG Desired Amount</th>
-        </tr>
+            <tr>
+                <th scope="col">Stack</th>
+                <th scope="col">ASG Name</th>
+                <th scope="col">Stage</th>
+                <th scope="col" class="th-md">Minimum Size</th>
+                <th scope="col" class="th-md">Desired Size</th>
+                <th scope="col" class="th-md">Maximum Size</th>
+                <th scope="col" class="th-md">Alive</th>
+                <th scope="col">Switch</th>
+            </tr>
         </thead>
 
         <tbody>
-    <% for (const group of groups) { %>
+        <% for (const group of groups) { %>
             <tr>
-                <td style="min-width: 20%; font-weight: bold; font-size: 120%"><%= group.AutoScalingGroupName %></td>
-                <td style=""><%= group.AutoScalingGroupARN %></td>
-                <td style="width: 10%"><%= JSON.stringify(group.Tags) %></td>
-                <td style="min-width: 5%"><button class="btn btn-warning" onclick="console.log('Dope!')">Scale down</button></td>
-                <td>
-                    <div></div>
-                    <div>MinSize: <%= group.MinSize %></div>
-                    <% if (group.DesiredCapacity === group.MinSize) { %>
-                        <div style="color: lightgreen">Desired: <%= group.DesiredCapacity %></div>
+                <td style="; font-weight: bold; font-size: 120%"><%= group.tags.stack %></td>
+                <td style="font-weight: bold; font-size: 120%"><%= group.group.AutoScalingGroupName %></td>
+                <td style=""><%= group.tags.stage %></td>
+                <td style=""><%= group.group.MinSize %></td>
+                <td style=""><%= group.group.DesiredCapacity %></td>
+                <td style=""><%= group.group.MaxSize %></td>
+                <td style="">
+                    <% if (group.group.DesiredCapacity === group.group.MinSize) { %>
+                        <div style="color: lightgreen">Desired: <%= group.group.DesiredCapacity %></div>
                     <% } else { %>
-                        <div style="color: palevioletred">Desired: <%= group.DesiredCapacity %></div>
-
+                        <div style="color: palevioletred">Desired: <%= group.group.DesiredCapacity %></div>
                     <% } %>
-                    <div>MaxSize: <%= group.MaxSize %></div>
-                <br/>
-
+                    <br/>
                 </td>
+                <td style="min-width: 5%"><button class="btn btn-warning" onclick="event.target.innerHTML = 'Scaling down...'">Scale down</button></td>
             </tr>
-    <% } %>
+        <% } %>
         </tbody>
     </table>
 
