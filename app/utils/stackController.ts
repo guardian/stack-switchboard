@@ -42,7 +42,10 @@ const queryCloudFormation = async (
         throw Error("StackSummaries missing");
       }
     })
-    .catch(err => err);
+    .catch(err => {
+      console.error("CF QUERY ERROR: ", err);
+      return err;
+    });
 };
 
 const getStackResources = async (stack: Stack): Promise<StackResources> => {
@@ -97,55 +100,69 @@ async function fetchAllStacks(): Promise<Stack[]> {
   let response: {
     stacks: CloudFormation.StackSummaries;
     NextToken: string;
-  } = await queryCloudFormation().then(async res => res);
+  } = await queryCloudFormation().catch(err => {
+    throw new Error(err);
+  });
+
   stacks = stacks.concat(response.stacks);
   while (response.NextToken) {
     response = await queryCloudFormation(response.NextToken).then(res => res);
     stacks = stacks.concat(response.stacks);
   }
+
   return stacks;
 }
 
 export const fetchSwitchboardData = async () => {
-  let stacks = await fetchAllStacks();
+  try {
+    const stacks: Stack[] | void = await fetchAllStacks().catch(err => {
+      throw new Error(err);
+    });
 
-  const usefulStacks = stacks.filter(desiredStacks()).sort(byStackName);
+    const usefulStacks: Stack[] = stacks
+      .filter(desiredStacks())
+      .sort(byStackName);
 
-  let enrichedStacks: StackResources[] = [];
-  for (let stack of usefulStacks) {
-    let result: StackResources = await getStackResources(stack);
-    enrichedStacks.push(result);
-  }
-
-  let stacksWithASGInfo: any[] = [];
-  for (let stackWithResources of enrichedStacks) {
-    console.log(`\n******* ${stackWithResources.stack.StackName} ********`);
-    if (
-      stackWithResources.resources.length > 0 &&
-      stackWithResources.resources[0].PhysicalResourceId
-    ) {
-      console.log(`[${stackWithResources.resources.length}] resources found`);
-      let fullyBuiltStackWithASGInformation = Object.assign(
-        stackWithResources,
-        { autoScalingGroups: <AutoScalingGroupInfo[]>[] }
-      );
-
-      for (let resource of stackWithResources.resources) {
-        if (resource.PhysicalResourceId) {
-          const stateInfo: AutoScalingGroupInfo = await getAutoScalingGroupState(
-            resource.PhysicalResourceId
-          );
-          fullyBuiltStackWithASGInformation.autoScalingGroups.push(stateInfo);
-          console.log(stateInfo);
-
-          stacksWithASGInfo.push(fullyBuiltStackWithASGInformation);
-        }
-      }
-    } else {
-      console.log(`${stackWithResources.stack.StackName} does not have an ASG`);
+    let enrichedStacks: StackResources[] = [];
+    for (let stack of usefulStacks) {
+      let result: StackResources = await getStackResources(stack);
+      enrichedStacks.push(result);
     }
+
+    let stacksWithASGInfo: any[] = [];
+    for (let stackWithResources of enrichedStacks) {
+      console.log(`\n******* ${stackWithResources.stack.StackName} ********`);
+      if (
+        stackWithResources.resources.length > 0 &&
+        stackWithResources.resources[0].PhysicalResourceId
+      ) {
+        console.log(`[${stackWithResources.resources.length}] resources found`);
+        let fullyBuiltStackWithASGInformation = Object.assign(
+          stackWithResources,
+          { autoScalingGroups: <AutoScalingGroupInfo[]>[] }
+        );
+
+        for (let resource of stackWithResources.resources) {
+          if (resource.PhysicalResourceId) {
+            const stateInfo: AutoScalingGroupInfo = await getAutoScalingGroupState(
+              resource.PhysicalResourceId
+            );
+            fullyBuiltStackWithASGInformation.autoScalingGroups.push(stateInfo);
+            console.log(stateInfo);
+
+            stacksWithASGInfo.push(fullyBuiltStackWithASGInformation);
+          }
+        }
+      } else {
+        console.log(
+          `${stackWithResources.stack.StackName} does not have an ASG`
+        );
+      }
+    }
+    return stacksWithASGInfo;
+  } catch (err) {
+    throw new Error(err);
   }
-  return stacksWithASGInfo;
 };
 
 module.exports = { fetchSwitchboardData };
