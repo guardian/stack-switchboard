@@ -2,6 +2,7 @@ import express from "express";
 import awsServerlessExpress from "aws-serverless-express";
 import path from "path";
 import { fetchSwitchboardData } from "./utils/stackController";
+import { EnrichedAutoScalingGroup } from "./utils/interfaces";
 
 const app = express();
 
@@ -20,13 +21,14 @@ export const handler = (event: any, context: any) =>
   );
 
 app.get("/", async (req, res) => {
-  let groups: any[];
+  let groups: EnrichedAutoScalingGroup[];
   try {
     groups = await fetchSwitchboardData();
   } catch (err) {
     console.error(err);
     groups = [];
   }
+
   res.render("index", {
     title: "Stack Switchboard",
     message: "Stack Switchboard",

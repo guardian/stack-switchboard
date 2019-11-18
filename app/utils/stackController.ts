@@ -1,5 +1,5 @@
 import AWS, { AutoScaling } from "aws-sdk";
-import { EnrichedAutoScalingGroup, Stack } from "./interfaces";
+import { DesiredTags, EnrichedAutoScalingGroup, Stack } from "./interfaces";
 
 const params = {
   region: "eu-west-1"
@@ -9,8 +9,8 @@ function alphabeticallyByStackName(
   a: EnrichedAutoScalingGroup,
   b: EnrichedAutoScalingGroup
 ): number {
-  const groupA: string = a.tags.stack.toLowerCase();
-  const groupB: string = b.tags.stack.toLowerCase();
+  const groupA: string = a.group.AutoScalingGroupName.toLowerCase();
+  const groupB: string = b.group.AutoScalingGroupName.toLowerCase();
   if (groupA < groupB) {
     return -1;
   } else if (groupA > groupB) {
@@ -20,10 +20,12 @@ function alphabeticallyByStackName(
 }
 
 function desiredGroups(): (group: AutoScaling.AutoScalingGroup) => boolean {
-  return (group: AutoScaling.AutoScalingGroup) =>
-    (group.AutoScalingGroupName.includes("flexible") ||
-      group.AutoScalingGroupName.includes("Flexible")) &&
-    group.AutoScalingGroupName.includes("CODE");
+  const whitelist = ["flexible", "Flexible"];
+  return group =>
+    !!(
+      group.AutoScalingGroupName.includes("CODE") &&
+      whitelist.find(item => group.AutoScalingGroupName.includes(item))
+    );
 }
 
 const getAutoScalingGroupState = async (): Promise<
@@ -32,7 +34,7 @@ const getAutoScalingGroupState = async (): Promise<
   const autoScaling = new AWS.AutoScaling(params);
 
   return await autoScaling
-    .describeAutoScalingGroups({})
+    .describeAutoScalingGroups({ MaxRecords: 100 })
     .promise()
     .then(
       (response: AutoScaling.AutoScalingGroupsType) =>
@@ -46,13 +48,21 @@ const hasValue = (
   return !!tag.Value;
 };
 
-function desiredTags(tags: AutoScaling.Tags): { stack: string; stage: string } {
+function desiredTags(tags: AutoScaling.Tags): DesiredTags {
   const selectedTags = tags
-    .filter(tag => (tag.Value && tag.Key === "Stack") || tag.Key === "Stage")
+    .filter(
+      tag =>
+        tag.Key === "Stack" ||
+        tag.Key === "Stage" ||
+        tag.Key === "aws:cloudformation:stack-name"
+    )
     .filter(hasValue);
   return {
     stack: selectedTags.filter(tag => tag.Key === "Stack")[0].Value,
-    stage: selectedTags.filter(tag => tag.Key === "Stage")[0].Value
+    stage: selectedTags.filter(tag => tag.Key === "Stage")[0].Value,
+    cloudformationName: selectedTags.filter(
+      tag => tag.Key === "aws:cloudformation:stack-name"
+    )[0].Value
   };
 }
 
