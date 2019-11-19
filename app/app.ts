@@ -21,6 +21,13 @@ export const handler = (event: any, context: any) =>
   );
 
 app.get("/", async (req, res) => {
+  res.render("index", {
+    title: "Stack Switchboard",
+    message: "Stack Switchboard"
+  });
+});
+
+app.get("/switchboard", async (req, res) => {
   let groups: EnrichedAutoScalingGroup[];
   try {
     groups = await fetchSwitchboardData();
@@ -29,7 +36,7 @@ app.get("/", async (req, res) => {
     groups = [];
   }
 
-  res.render("index", {
+  res.render("switchboard", {
     title: "Stack Switchboard",
     message: "Stack Switchboard",
     groups
