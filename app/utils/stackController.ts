@@ -19,11 +19,13 @@ function alphabeticallyByStackName(
   return 0;
 }
 
-function desiredGroups(): (group: AutoScaling.AutoScalingGroup) => boolean {
-  const whitelist = ["flexible", "Flexible"];
+function desiredGroups(
+  whitelist: string[],
+  stage?: string
+): (group: AutoScaling.AutoScalingGroup) => boolean {
   return group =>
     !!(
-      group.AutoScalingGroupName.includes("CODE") &&
+      group.AutoScalingGroupName.includes(stage || "") &&
       whitelist.find(item => group.AutoScalingGroupName.includes(item))
     );
 }
@@ -69,7 +71,7 @@ function desiredTags(tags: AutoScaling.Tags): DesiredTags {
 export const fetchSwitchboardData = async () => {
   const autoscalingGroups = await getAutoScalingGroupState();
   return autoscalingGroups
-    .filter(desiredGroups())
+    .filter(desiredGroups(["flexible", "Flexible"], "CODE"))
     .map((group: AutoScaling.AutoScalingGroup) => {
       return {
         group,
@@ -79,4 +81,8 @@ export const fetchSwitchboardData = async () => {
     .sort(alphabeticallyByStackName);
 };
 
-module.exports = { fetchSwitchboardData };
+module.exports = {
+  alphabeticallyByStackName,
+  desiredGroups,
+  fetchSwitchboardData
+};
