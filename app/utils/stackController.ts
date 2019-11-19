@@ -1,16 +1,16 @@
 import AWS, { AutoScaling } from "aws-sdk";
-import { DesiredTags, EnrichedAutoScalingGroup, Stack } from "./interfaces";
+import { EnrichedAutoScalingGroup, Stack } from "./interfaces";
 
 const params = {
   region: "eu-west-1"
 };
 
-function alphabeticallyByStackName(
+function alphabeticallyByName(
   a: EnrichedAutoScalingGroup,
   b: EnrichedAutoScalingGroup
 ): number {
-  const groupA: string = a.group.AutoScalingGroupName.toLowerCase();
-  const groupB: string = b.group.AutoScalingGroupName.toLowerCase();
+  const groupA: string = a.name.toLowerCase();
+  const groupB: string = b.name.toLowerCase();
   if (groupA < groupB) {
     return -1;
   } else if (groupA > groupB) {
@@ -50,43 +50,45 @@ const hasValue = (
   return !!tag.Value;
 };
 
-const getDesiredTags = (
-  tags: AutoScaling.Tag[],
-  desired: string[]
-): DesiredTags => {
+const getDesiredTags = (tags: AutoScaling.Tag[], desired: string[]) => {
   const selectedTags = tags
     .filter(tag => desired.includes(tag.Key))
     .filter(hasValue);
 
   let obj: any = {};
-  desired.map(
-    desiredTag =>
-      (obj[desiredTag] = selectedTags.filter(
-        tag => tag.Key === desiredTag
-      )[0].Value)
-  );
+  desired.map(desiredTag => {
+    const tagValue: AutoScaling.Tag[] = selectedTags.filter(
+      tag => tag.Key === desiredTag
+    );
+    obj[desiredTag] =
+      tagValue.length > 0 && tagValue[0].Value ? tagValue[0].Value : "";
+  });
   return obj;
 };
 
 export const fetchSwitchboardData = async () => {
   const desiredTags = ["Stack", "Stage", "aws:cloudformation:stack-name"];
-  const autoscalingWhitelist = ["flexible", "Flexible"];
+  const groupWhitelist = ["flexible", "Flexible"];
 
-  const autoscalingGroups = await getAutoScalingGroupState();
+  const autoscalingGroups: AutoScaling.AutoScalingGroup[] = await fns.getAutoScalingGroupState();
   return autoscalingGroups
-    .filter(desiredGroups(autoscalingWhitelist, "CODE"))
-    .map((group: AutoScaling.AutoScalingGroup) => {
+    .filter(desiredGroups(groupWhitelist, "CODE"))
+    .map(group => {
       return {
         group,
+        name: group.AutoScalingGroupName,
         tags: getDesiredTags(group.Tags as AutoScaling.Tags, desiredTags)
       };
     })
-    .sort(alphabeticallyByStackName);
+    .sort(alphabeticallyByName);
 };
 
-module.exports = {
-  alphabeticallyByStackName,
+const fns = {
+  alphabeticallyByStackName: alphabeticallyByName,
   desiredGroups,
   getDesiredTags,
-  fetchSwitchboardData
+  fetchSwitchboardData,
+  getAutoScalingGroupState
 };
+
+module.exports = fns;
