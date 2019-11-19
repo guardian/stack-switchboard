@@ -50,32 +50,35 @@ const hasValue = (
   return !!tag.Value;
 };
 
-function desiredTags(tags: AutoScaling.Tags): DesiredTags {
+const getDesiredTags = (
+  tags: AutoScaling.Tag[],
+  desired: string[]
+): DesiredTags => {
   const selectedTags = tags
-    .filter(
-      tag =>
-        tag.Key === "Stack" ||
-        tag.Key === "Stage" ||
-        tag.Key === "aws:cloudformation:stack-name"
-    )
+    .filter(tag => desired.includes(tag.Key))
     .filter(hasValue);
-  return {
-    stack: selectedTags.filter(tag => tag.Key === "Stack")[0].Value,
-    stage: selectedTags.filter(tag => tag.Key === "Stage")[0].Value,
-    cloudformationName: selectedTags.filter(
-      tag => tag.Key === "aws:cloudformation:stack-name"
-    )[0].Value
-  };
-}
+
+  let obj: any = {};
+  desired.map(
+    desiredTag =>
+      (obj[desiredTag] = selectedTags.filter(
+        tag => tag.Key === desiredTag
+      )[0].Value)
+  );
+  return obj;
+};
 
 export const fetchSwitchboardData = async () => {
+  const desiredTags = ["Stack", "Stage", "aws:cloudformation:stack-name"];
+  const autoscalingWhitelist = ["flexible", "Flexible"];
+
   const autoscalingGroups = await getAutoScalingGroupState();
   return autoscalingGroups
-    .filter(desiredGroups(["flexible", "Flexible"], "CODE"))
+    .filter(desiredGroups(autoscalingWhitelist, "CODE"))
     .map((group: AutoScaling.AutoScalingGroup) => {
       return {
         group,
-        tags: desiredTags(group.Tags as AutoScaling.Tags)
+        tags: getDesiredTags(group.Tags as AutoScaling.Tags, desiredTags)
       };
     })
     .sort(alphabeticallyByStackName);
@@ -84,5 +87,6 @@ export const fetchSwitchboardData = async () => {
 module.exports = {
   alphabeticallyByStackName,
   desiredGroups,
+  getDesiredTags,
   fetchSwitchboardData
 };

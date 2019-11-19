@@ -1,6 +1,9 @@
+import { Tag } from "aws-cdk/lib/api/cxapp/stacks";
+
 const {
   alphabeticallyByStackName,
-  desiredGroups
+  desiredGroups,
+  getDesiredTags
 } = require("../utils/stackController");
 
 describe("alphabeticallyByStackName", function() {
@@ -77,5 +80,27 @@ describe("desiredGroups", function() {
         { AutoScalingGroupName: "thing B-CODE", foo: 1345 }
       ]
     );
+  });
+});
+
+describe("desiredTags", function() {
+  test("creates a useful object of desired tags", () => {
+    const arr: Tag[] = [
+      { Key: "undesired-tag", Value: "some-tag-value" },
+      { Key: "tag1", Value: "some-stage-value" },
+      { Key: "tag2", Value: "some-stack-value" },
+      {
+        Key: "alsoDesired",
+        Value: "some-cloudformation-value"
+      }
+    ];
+
+    const desired = ["tag1", "tag2", "alsoDesired"];
+
+    expect(getDesiredTags(arr, desired)).toEqual({
+      tag1: "some-stage-value",
+      tag2: "some-stack-value",
+      alsoDesired: "some-cloudformation-value"
+    });
   });
 });
