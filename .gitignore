@@ -6,3 +6,6 @@ node_modules
 
 # generated package
 dist
+
+# generated from testing
+coverage

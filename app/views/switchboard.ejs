@@ -1,0 +1,46 @@
+<%- include partials/header.ejs %>
+
+
+<body>
+<%- include nav.ejs %>
+<table class="table table-responsive-lg table-dark table-striped table-hover">
+    <thead>
+    <tr>
+        <th scope="col">CloudFormation Stack</th>
+        <th scope="col">Stage</th>
+        <th scope="col">ASG Name</th>
+        <th scope="col" class="th-md">Minimum Size</th>
+        <th scope="col" class="th-md">Desired Size</th>
+        <th scope="col" class="th-md">Maximum Size</th>
+        <th scope="col" class="th-md">Alive</th>
+        <th scope="col">Switch</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% for (const group of groups) { %>
+        <tr>
+            <td ><%= group.tags["aws:cloudformation:stack-name"] %></td>
+            <td ><%= group.tags.Stage %></td>
+            <td><%= group.name %></td>
+            <td ><%= group.group.MinSize %></td>
+            <td ><%= group.group.DesiredCapacity %></td>
+            <td ><%= group.group.MaxSize %></td>
+            <td >
+                <% if (group.group.DesiredCapacity === group.group.MinSize) { %>
+                    <span style="color: lightgreen">Desired: <%= group.group.DesiredCapacity %></span>
+                <% } else { %>
+                    <span style="color: palevioletred">Desired: <%= group.group.DesiredCapacity %></span>
+                <% } %>
+            </td>
+            <td style="min-width: 5%"><button class="btn btn-warning" onclick="event.target.innerHTML = 'Scaling down...'">Scale down</button></td>
+        </tr>
+    <% } %>
+    </tbody>
+</table>
+
+<%- include partials/footer.ejs %>
+
+</body>
+
+</html>
