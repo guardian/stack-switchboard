@@ -1,9 +1,6 @@
-import AWS, { AutoScaling } from "aws-sdk";
+import { AutoScaling } from "aws-sdk";
 import { EnrichedAutoScalingGroup, Stack } from "./interfaces";
-
-const params = {
-  region: "eu-west-1"
-};
+import { getAutoScalingGroupState } from "./asgController";
 
 function alphabeticallyByName(
   a: EnrichedAutoScalingGroup,
@@ -29,20 +26,6 @@ function desiredGroups(
       whitelist.find(item => group.AutoScalingGroupName.includes(item))
     );
 }
-
-const getAutoScalingGroupState = async (): Promise<
-  AutoScaling.AutoScalingGroup[]
-> => {
-  const autoScaling = new AWS.AutoScaling(params);
-
-  return await autoScaling
-    .describeAutoScalingGroups({ MaxRecords: 100 })
-    .promise()
-    .then(
-      (response: AutoScaling.AutoScalingGroupsType) =>
-        response.AutoScalingGroups
-    );
-};
 
 const hasValue = (
   tag: AutoScaling.Tag
@@ -70,7 +53,7 @@ export const fetchSwitchboardData = async () => {
   const desiredTags = ["Stack", "Stage", "aws:cloudformation:stack-name"];
   const groupWhitelist = ["flexible", "Flexible"];
 
-  const autoscalingGroups: AutoScaling.AutoScalingGroup[] = await fns.getAutoScalingGroupState();
+  const autoscalingGroups: AutoScaling.AutoScalingGroup[] = await getAutoScalingGroupState();
   return autoscalingGroups
     .filter(desiredGroups(groupWhitelist, "CODE"))
     .map(group => {
@@ -87,8 +70,7 @@ const fns = {
   alphabeticallyByName,
   desiredGroups,
   getDesiredTags,
-  fetchSwitchboardData,
-  getAutoScalingGroupState
+  fetchSwitchboardData
 };
 
 module.exports = fns;

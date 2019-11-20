@@ -1,6 +1,7 @@
 import { Tag } from "aws-cdk/lib/api/cxapp/stacks";
 
-const stackController = require("../utils/stackController");
+const stackController = require("../utils/switchboardBuilder");
+const asgController = require("../utils/asgController");
 
 describe("alphabeticallyByName", function() {
   test("Should sort array by name", () => {
@@ -127,7 +128,7 @@ describe("fetchSwitchboardData", () => {
       exampleASGItem("flexible-CODE-3", "CODE", "flexible", "cfName3")
     ];
 
-    stackController.getAutoScalingGroupState = jest.fn(
+    asgController.getAutoScalingGroupState = jest.fn(
       () => dummyAutoscalingGroups
     );
   });
@@ -139,7 +140,7 @@ describe("fetchSwitchboardData", () => {
       exampleASGItem("flexible-CODE-3", "CODE", "flexible", "cfName3")
     ];
 
-    stackController.getAutoScalingGroupState = jest.fn(
+    asgController.getAutoScalingGroupState = jest.fn(
       () => dummyAutoscalingGroups
     );
 
@@ -158,7 +159,7 @@ describe("fetchSwitchboardData", () => {
       exampleASGItem("unwanted-PROD-thing", "CODE", "blah", "some-cf-name")
     ];
 
-    stackController.getAutoScalingGroupState = jest.fn(
+    asgController.getAutoScalingGroupState = jest.fn(
       () => dummyAutoscalingGroups
     );
 
@@ -191,7 +192,7 @@ describe("fetchSwitchboardData", () => {
       )
     ];
 
-    stackController.getAutoScalingGroupState = jest.fn(
+    asgController.getAutoScalingGroupState = jest.fn(
       () => dummyAutoscalingGroups
     );
 

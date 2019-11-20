@@ -1,7 +1,7 @@
 import express from "express";
 import awsServerlessExpress from "aws-serverless-express";
 import path from "path";
-import { fetchSwitchboardData } from "./utils/stackController";
+import { fetchSwitchboardData } from "./utils/switchboardBuilder";
 import { EnrichedAutoScalingGroup } from "./utils/interfaces";
 
 const app = express();
