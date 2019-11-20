@@ -1,15 +1,9 @@
-import AWS, { AutoScaling } from "aws-sdk";
+import { AutoScaling } from "aws-sdk";
 
-const params = {
-  region: "eu-west-1"
-};
-
-export const getAutoScalingGroupState = async (): Promise<
-  AutoScaling.AutoScalingGroup[]
-> => {
-  const autoScaling = new AWS.AutoScaling(params);
-
-  return await autoScaling
+const getAutoScalingGroupState = async (
+  autoScalingClient: AutoScaling
+): Promise<AutoScaling.AutoScalingGroup[]> => {
+  return await autoScalingClient
     .describeAutoScalingGroups({ MaxRecords: 100 })
     .promise()
     .then(
@@ -18,8 +12,15 @@ export const getAutoScalingGroupState = async (): Promise<
     );
 };
 
-const fns = {
-  getAutoScalingGroupState
+const spinDownAutoScalingGroup = (
+  autoScalingClient: AutoScaling,
+  AutoScalingGroupName: string,
+  DesiredCapacity: number
+) => {
+  return autoScalingClient.setDesiredCapacity({
+    AutoScalingGroupName,
+    DesiredCapacity
+  });
 };
 
-module.exports = fns;
+export { spinDownAutoScalingGroup, getAutoScalingGroupState };

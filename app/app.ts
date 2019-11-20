@@ -27,6 +27,34 @@ app.get("/", async (req, res) => {
   });
 });
 
+app.post("/api/scaledown", async (req, res) => {
+  res.json({
+    scaleup: false
+  });
+});
+
+app.post("/api/scaleup", async (req, res) => {
+  res.json({
+    scaleup: true
+  });
+});
+
+app.get("/table", async (req, res) => {
+  let groups: EnrichedAutoScalingGroup[];
+  try {
+    groups = await fetchSwitchboardData();
+  } catch (err) {
+    console.error(err);
+    groups = [];
+  }
+
+  res.render("table", {
+    title: "Stack Switchboard",
+    message: "Stack Switchboard",
+    groups
+  });
+});
+
 app.get("/switchboard", async (req, res) => {
   let groups: EnrichedAutoScalingGroup[];
   try {
