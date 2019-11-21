@@ -3,3 +3,13 @@ html, body {
     color: white;
     font-family: Arial, serif;
 }
+
+h1 {
+    padding: 10px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    height: 2.5rem;
+}

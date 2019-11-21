@@ -5,7 +5,8 @@
   "main": "app.ts",
   "scripts": {
     "start": "AWS_PROFILE=composer ts-node-dev --respawn app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "test-watch": "jest --watch",
     "build": "ncc build app.ts -m -o ../dist"
   },
   "author": "",
@@ -19,6 +20,8 @@
     "@zeit/ncc": "^0.20.5",
     "aws-cdk": "^1.16.2",
     "ejs": "^2.7.1",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.1.0",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.7.2"
   },
