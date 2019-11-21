@@ -6,11 +6,9 @@ import { EnrichedAutoScalingGroup } from "./utils/interfaces";
 
 const app = express();
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "/views"));
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(path.join(__dirname, "/build")));
 
 // TODO: Work out what to put instead of 'any'
 export const handler = (event: any, context: any) =>
@@ -20,11 +18,8 @@ export const handler = (event: any, context: any) =>
     context
   );
 
-app.get("/", async (req, res) => {
-  res.render("index", {
-    title: "Stack Switchboard",
-    message: "Stack Switchboard"
-  });
+app.get("/api/", async (req, res) => {
+  res.json({});
 });
 
 app.post("/api/scaledown", async (req, res) => {
@@ -39,7 +34,7 @@ app.post("/api/scaleup", async (req, res) => {
   });
 });
 
-app.get("/table", async (req, res) => {
+app.get("/api/switchboard", async (req, res) => {
   let groups: EnrichedAutoScalingGroup[];
   try {
     groups = await fetchSwitchboardData();
@@ -48,27 +43,16 @@ app.get("/table", async (req, res) => {
     groups = [];
   }
 
-  res.render("table", {
-    title: "Stack Switchboard",
-    message: "Stack Switchboard",
-    groups
-  });
+  res.json({ groups });
 });
 
-app.get("/switchboard", async (req, res) => {
-  let groups: EnrichedAutoScalingGroup[];
-  try {
-    groups = await fetchSwitchboardData();
-  } catch (err) {
-    console.error(err);
-    groups = [];
-  }
+app.get("/api/*", async (req, res) => {
+  res.json({ api: true });
+});
 
-  res.render("switchboard", {
-    title: "Stack Switchboard",
-    message: "Stack Switchboard",
-    groups
-  });
+app.get("/*", (req, res) => {
+  res.type("html");
+  res.sendFile(path.join(__dirname + "/build/index.html"));
 });
 
 if (require.main === module) {
