@@ -5,10 +5,6 @@ import { TableRow } from "./tableRow";
 import { fetchSwitchboardData } from "../utils/switchboardBuilder";
 import { EnrichedAutoScalingGroup } from "../utils/interfaces";
 
-const scale = (min: number, desired: number, max: number) => {
-  console.log("Scaling to: ", min, desired, max);
-};
-
 export const SwitchboardTable: React.FC = () => {
   const [data, setData] = useState([] as EnrichedAutoScalingGroup[]);
 
@@ -54,8 +50,7 @@ export const SwitchboardTable: React.FC = () => {
                 const { group } = row;
                 return (
                   <TableRow
-                    group={group}
-                    scale={scale}
+                    groupProp={group}
                     key={group.AutoScalingGroupName}
                   />
                 );

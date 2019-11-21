@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import AutoScaling from "aws-sdk/clients/autoscaling";
 
@@ -11,11 +11,18 @@ const assessAlive = (group: AutoScaling.AutoScalingGroup): boolean => {
 };
 
 interface TableRowProps {
-  group: AutoScaling.AutoScalingGroup;
-  scale: Function;
+  groupProp: AutoScaling.AutoScalingGroup;
 }
 
-export const TableRow = ({ group, scale }: TableRowProps) => {
+export const TableRow = ({ groupProp }: TableRowProps) => {
+  const [group, setGroup] = useState(groupProp);
+
+  const scale = (min: number, desired: number, max: number) => {
+    console.log("Scaling to: ", min, desired, max);
+    group.MinSize = min;
+    setGroup(group);
+  };
+
   return (
     <tr key={group.AutoScalingGroupName}>
       <td>{getTagValue(group, "Stack")}</td>
