@@ -8,7 +8,6 @@ function cleanup() {
 
 function build-react() {
     cd frontend
-    ls -la
     npm install
     npm run build
     cp -R build ../app/
@@ -17,7 +16,6 @@ function build-react() {
 
 function build-app() {
     cd app
-    ls -la
     npm install
     npm run build
     cd -
@@ -25,7 +23,6 @@ function build-app() {
 
 function build-resources() {
     cd cdk
-    ls -la
     npm install
     npm run compile
     cp -R ../dist ./
