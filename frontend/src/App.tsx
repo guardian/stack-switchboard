@@ -1,16 +1,31 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import "./App.css";
 
 import { SwitchboardTable } from "./components/switchboardTable";
-import "./App.css";
-import CustomNav from "./components/nav";
+import { CustomNav } from "./components/customNav";
+import { Index } from "./components";
+import { CentralProduction } from "./components/centralProduction";
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <CustomNav />
-      <SwitchboardTable />
-    </div>
+    <Router>
+      <div className="App">
+        <CustomNav />
+        <Switch>
+          <Route path="/switchboard">
+            <SwitchboardTable />
+          </Route>
+          <Route path="/centralproduction">
+            <CentralProduction />
+          </Route>
+          <Route path="/">
+            <Index />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 };
 
