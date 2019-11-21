@@ -13,9 +13,9 @@
   },
   "devDependencies": {
     "@aws-cdk/assert": "^1.16.2",
-    "@aws-cdk/aws-apigateway": "latest",
+    "@aws-cdk/aws-apigateway": "^1.16.2",
     "@aws-cdk/aws-iam": "^1.16.2",
-    "@aws-cdk/aws-lambda": "latest",
+    "@aws-cdk/aws-lambda": "^1.16.2",
     "@aws-cdk/core": "^1.16.2",
     "@types/jest": "^24.0.22",
     "@types/node": "10.17.5",
