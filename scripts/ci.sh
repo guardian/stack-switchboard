@@ -8,23 +8,23 @@ function cleanup() {
 
 function build-react() {
     cd frontend
-    npm install
-    npm run build
+    yarn install
+    yarn build
     cp -R build ../app/
     cd -
 }
 
 function build-app() {
     cd app
-    npm install
-    npm run build
+    yarn install
+    yarn build
     cd -
 }
 
 function build-resources() {
     cd cdk
-    npm install
-    npm run compile
+    rm -rf node_modules && yarn install
+    yarn compile
     cp -R ../dist ./
     npx @guardian/node-riffraff-artifact
 }
