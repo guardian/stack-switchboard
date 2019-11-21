@@ -10,15 +10,15 @@ export const CustomNav = () => {
       <Navbar.Collapse>
         <Navbar.Brand href="/">Stack Switchboard</Navbar.Brand>
         <Nav className="mr-auto">
-          <Nav.Link>
-            <Link to={"/"}>Home</Link>
-          </Nav.Link>
-          <Nav.Link>
-            <Link to={"/switchboard"}>Switchboard</Link>
-          </Nav.Link>
-          <Nav.Link>
-            <Link to={"/centralproduction"}>Central Production</Link>
-          </Nav.Link>
+          <Link component={Nav.Link} to={"/"}>
+            Home
+          </Link>
+          <Link component={Nav.Link} to={"/switchboard"}>
+            Switchboard
+          </Link>
+          <Link component={Nav.Link} to={"/centralproduction"}>
+            Central Production
+          </Link>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
