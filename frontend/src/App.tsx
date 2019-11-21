@@ -1,7 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import SwitchboardTable from "./components/switchboardTable";
+import { SwitchboardTable } from "./components/switchboardTable";
 import "./App.css";
 import CustomNav from "./components/nav";
 

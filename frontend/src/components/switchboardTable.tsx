@@ -1,45 +1,33 @@
 import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
+
+import { TableRow } from "./tableRow";
 import { fetchSwitchboardData } from "../utils/switchboardBuilder";
 import { EnrichedAutoScalingGroup } from "../utils/interfaces";
-import AutoScaling from "aws-sdk/clients/autoscaling";
 
-function getTagValue(group: AutoScaling.AutoScalingGroup, key: string) {
-  return group.Tags ? group.Tags.filter(t => t.Key === key)[0].Value : "";
-}
+const scale = (min: number, desired: number, max: number) => {
+  console.log("Scaling to: ", min, desired, max);
+};
 
-function assessAlive(group: AutoScaling.AutoScalingGroup): boolean {
-  return group.MinSize > 0;
-}
-
-function scale(min: number, desired: number, max: number) {
-  console.log("Would scale: ", min, desired, max);
-}
-
-const SwitchboardTable: React.FC = () => {
-  let initialState: EnrichedAutoScalingGroup[] = [];
-
-  const [data, setData] = useState(initialState);
-
-  const GetRows = async () => {
-    let rowData: EnrichedAutoScalingGroup[];
-    try {
-      rowData = await fetchSwitchboardData();
-    } catch (e) {
-      console.error(e);
-      rowData = [];
-    }
-    setData(rowData);
-  };
+export const SwitchboardTable: React.FC = () => {
+  const [data, setData] = useState([] as EnrichedAutoScalingGroup[]);
 
   useEffect(() => {
-    GetRows();
+    (async () => {
+      let data: EnrichedAutoScalingGroup[];
+      try {
+        data = await fetchSwitchboardData();
+      } catch (e) {
+        console.error(e);
+        data = [];
+      }
+      setData(data);
+    })();
   }, []);
 
   return (
     <div>
-      <Table variant={"dark"} bordered striped hover responsive>
+      <Table variant={"dark"} striped hover responsive>
         <thead>
           <tr>
             <th scope="col">CloudFormation Stack</th>
@@ -65,38 +53,11 @@ const SwitchboardTable: React.FC = () => {
             ? data.map((row: EnrichedAutoScalingGroup) => {
                 const { group } = row;
                 return (
-                  <tr key={group.AutoScalingGroupName}>
-                    <td>{getTagValue(group, "Stack")}</td>
-                    <td>{getTagValue(group, "Stage")}</td>
-                    <td>{group.AutoScalingGroupName}</td>
-                    <td>{group.MinSize}</td>
-                    <td>{group.DesiredCapacity}</td>
-                    <td>{group.MaxSize}</td>
-                    <td>
-                      {assessAlive(group) ? (
-                        <div style={{ color: "lightgreen" }}>Yes!</div>
-                      ) : (
-                        <div style={{ color: "palevioletred" }}>No.</div>
-                      )}
-                    </td>
-                    <td>
-                      {assessAlive(group) ? (
-                        <Button
-                          variant={"warning"}
-                          onClick={() => scale(0, 0, 0)}
-                        >
-                          Scale down
-                        </Button>
-                      ) : (
-                        <Button
-                          variant={"primary"}
-                          onClick={() => scale(3, 3, 6)}
-                        >
-                          Scale up
-                        </Button>
-                      )}
-                    </td>
-                  </tr>
+                  <TableRow
+                    group={group}
+                    scale={scale}
+                    key={group.AutoScalingGroupName}
+                  />
                 );
               })
             : undefined}
@@ -105,5 +66,3 @@ const SwitchboardTable: React.FC = () => {
     </div>
   );
 };
-
-export default SwitchboardTable;
