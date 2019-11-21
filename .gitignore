@@ -6,7 +6,7 @@ node_modules
 
 # generated package
 dist
-api/build
+app/build
 frontend/build
 
 # generated from testing
