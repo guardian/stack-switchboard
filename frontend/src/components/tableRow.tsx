@@ -14,13 +14,37 @@ interface TableRowProps {
   groupProp: AutoScaling.AutoScalingGroup;
 }
 
+function scaleButton(
+  group: AutoScaling.AutoScalingGroup,
+  scale: (min: number, desired: number, max: number) => void
+) {
+  return assessAlive(group) ? (
+    <Button variant={"warning"} onClick={() => scale(0, 0, 0)}>
+      Scale down
+    </Button>
+  ) : (
+    <Button variant={"primary"} onClick={() => scale(3, 3, 6)}>
+      Scale up
+    </Button>
+  );
+}
+
 export const TableRow = ({ groupProp }: TableRowProps) => {
   const [group, setGroup] = useState(groupProp);
+  const [loading, setLoading] = useState(false);
 
   const scale = (min: number, desired: number, max: number) => {
     console.log("Scaling to: ", min, desired, max);
-    group.MinSize = min;
-    setGroup(group);
+    // insert AWS stuff here
+
+    setGroup({ ...group, MinSize: min });
+    setLoading(true);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    console.log(group.MinSize);
   };
 
   return (
@@ -38,17 +62,7 @@ export const TableRow = ({ groupProp }: TableRowProps) => {
           <div style={{ color: "palevioletred" }}>No.</div>
         )}
       </td>
-      <td>
-        {assessAlive(group) ? (
-          <Button variant={"warning"} onClick={() => scale(0, 0, 0)}>
-            Scale down
-          </Button>
-        ) : (
-          <Button variant={"primary"} onClick={() => scale(3, 3, 6)}>
-            Scale up
-          </Button>
-        )}
-      </td>
+      <td>{loading ? "Loading!" : scaleButton(group, scale)}</td>
     </tr>
   );
 };
