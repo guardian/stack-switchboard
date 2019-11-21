@@ -6,6 +6,13 @@ function cleanup() {
     rm -rf node_modules dist cdk/node_modules
 }
 
+function build-react() {
+    cd frontend
+    npm run build
+    cp -R build ../app/
+    cd -
+}
+
 function build-app() {
     cd app
     npm install
@@ -22,5 +29,6 @@ function build-resources() {
 }
 
 cleanup
+build-react
 build-app
 build-resources
