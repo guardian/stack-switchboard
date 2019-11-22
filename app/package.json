@@ -7,7 +7,7 @@
     "start": "AWS_PROFILE=composer ts-node-dev --respawn app.ts",
     "test": "jest",
     "test-watch": "jest --watch",
-    "build": "ncc build app.ts -m -o ../dist"
+    "build": "ncc build app.ts -o ../dist"
   },
   "author": "",
   "license": "ISC",
