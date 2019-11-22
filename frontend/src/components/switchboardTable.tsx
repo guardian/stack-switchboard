@@ -13,8 +13,12 @@ export const SwitchboardTable: React.FC = () => {
         groups: []
       };
       const response = await fetch("/api/switchboard");
-      switchboardData = await response.json();
-      setData(switchboardData.groups);
+      if (!response.ok) {
+        console.error(response.statusText);
+      } else {
+        switchboardData = await response.json();
+        setData(switchboardData.groups);
+      }
     })();
   }, []);
 
