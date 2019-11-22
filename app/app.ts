@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 
 import { fetchSwitchboardData } from "./utils/switchboardBuilder";
 import { EnrichedAutoScalingGroup } from "./utils/interfaces";
-import { spinDownAutoScalingGroup } from "./utils/asgController";
+import { scaleAutoScalingGroup } from "./utils/asgController";
 import AWS, { AutoScaling } from "aws-sdk";
 
 const app = express();
@@ -29,7 +29,7 @@ app.get("/api/", async (req, res) => {
   res.json({});
 });
 
-app.post("/api/scaledown", async (req, res) => {
+app.post("/api/scale", async (req, res) => {
   let success: boolean;
   const {
     min,
@@ -50,7 +50,7 @@ app.post("/api/scaledown", async (req, res) => {
   const autoScaling = new AWS.AutoScaling(params);
 
   try {
-    success = await spinDownAutoScalingGroup(
+    success = await scaleAutoScalingGroup(
       autoScaling,
       group.AutoScalingGroupName,
       { min, desired, max }
@@ -59,18 +59,7 @@ app.post("/api/scaledown", async (req, res) => {
     console.error(err);
     success = false;
   }
-  res.json({
-    success,
-    reqBody: {
-      body: req.body
-    }
-  });
-});
-
-app.post("/api/scaleup", async (req, res) => {
-  res.json({
-    scaleup: true
-  });
+  res.json({ success });
 });
 
 app.get("/api/switchboard", async (req, res) => {

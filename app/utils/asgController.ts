@@ -1,4 +1,10 @@
-import AWS, { AutoScaling } from "aws-sdk";
+import { AutoScaling } from "aws-sdk";
+
+interface ASGState {
+  min: number;
+  desired: number;
+  max: number;
+}
 
 const getAutoScalingGroupState = async (
   autoScalingClient: AutoScaling
@@ -12,24 +18,37 @@ const getAutoScalingGroupState = async (
     );
 };
 
-const spinDownAutoScalingGroup = async (
+const scaleAutoScalingGroup = async (
   autoScalingClient: AutoScaling,
   AutoScalingGroupName: string,
-  DesiredAmounts: { min: number; desired: number; max: number }
+  { min, max, desired }: ASGState
 ): Promise<boolean> => {
-  function timeout(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  if (
+    AutoScalingGroupName ===
+    "Flexible-Apps-Secondary-CODE-ComposerAutoscalingGroup-1IGJ3K04CQSLJ"
+  ) {
+    console.log(
+      `Scaling [${AutoScalingGroupName}] to [min: ${min}, desired: ${desired}, max: ${max}]`
+    );
+    const result = await autoScalingClient
+      .updateAutoScalingGroup({
+        AutoScalingGroupName,
+        DesiredCapacity: desired,
+        MinSize: min,
+        MaxSize: max
+      })
+      .promise()
+      .catch(err => console.error("Error:", err));
+    console.log(result);
+  } else {
+    console.log("would spin down ", AutoScalingGroupName, {
+      min,
+      max,
+      desired
+    });
+    return false;
   }
-
-  await timeout(3000);
-  console.log("would spin down ", AutoScalingGroupName, DesiredAmounts);
   return true;
-
-  // const result = await autoScalingClient.setDesiredCapacity({
-  //   AutoScalingGroupName,
-  //   DesiredCapacity
-  // });
-  // console.log(result);
 };
 
-export { spinDownAutoScalingGroup, getAutoScalingGroupState };
+export { scaleAutoScalingGroup, getAutoScalingGroupState };
