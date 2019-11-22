@@ -3,9 +3,11 @@ import Table from "react-bootstrap/Table";
 
 import { TableRow } from "./tableRow";
 import { EnrichedAutoScalingGroup } from "../utils/interfaces";
+import Spinner from "react-bootstrap/Spinner";
 
 export const SwitchboardTable: React.FC = () => {
   const [data, setData] = useState([] as EnrichedAutoScalingGroup[]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -19,46 +21,42 @@ export const SwitchboardTable: React.FC = () => {
         switchboardData = await response.json();
         setData(switchboardData.groups);
       }
+      setLoading(false);
     })();
   }, []);
 
   return (
     <div>
-      <Table variant={"dark"} striped hover responsive>
-        <thead>
-          <tr>
-            <th scope="col">CloudFormation Stack</th>
-            <th scope="col">Stage</th>
-            <th scope="col">ASG Name</th>
-            <th scope="col" className="th-md">
-              Minimum Size
-            </th>
-            <th scope="col" className="th-md">
-              Desired Capacity
-            </th>
-            <th scope="col" className="th-md">
-              Maximum Size
-            </th>
-            <th scope="col" className="th-md">
-              Alive
-            </th>
-            <th scope="col">Switch</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.length > 0
-            ? data.map((row: EnrichedAutoScalingGroup) => {
-                const { group } = row;
-                return (
+      {loading ? (
+        <div style={{ marginTop: "30px", textAlign: "center" }}>
+          <Spinner animation={"grow"} variant={"light"} />
+        </div>
+      ) : (
+        <Table variant={"dark"} striped hover responsive>
+          <thead>
+            <tr>
+              <th style={{ width: "30px" }}>Switch</th>
+              <th>CloudFormation Stack</th>
+              <th>Stage</th>
+              <th>ASG Name</th>
+              <th>Minimum Size</th>
+              <th>Desired Capacity</th>
+              <th>Maximum Size</th>
+              <th>Alive</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.length > 0
+              ? data.map((row: EnrichedAutoScalingGroup) => (
                   <TableRow
-                    groupProp={group}
-                    key={group.AutoScalingGroupName}
+                    groupProp={row.group}
+                    key={row.group.AutoScalingGroupName}
                   />
-                );
-              })
-            : undefined}
-        </tbody>
-      </Table>
+                ))
+              : undefined}
+          </tbody>
+        </Table>
+      )}
     </div>
   );
 };

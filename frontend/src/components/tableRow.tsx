@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import AutoScaling from "aws-sdk/clients/autoscaling";
+import Spinner from "react-bootstrap/Spinner";
 
 const getTagValue = (group: AutoScaling.AutoScalingGroup, key: string) => {
   return group.Tags ? group.Tags.filter(t => t.Key === key)[0].Value : "";
@@ -19,14 +20,22 @@ function scaleButton(
   scale: (min: number, desired: number, max: number) => void
 ) {
   return assessAlive(group) ? (
-    <Button variant={"outline-warning"} onClick={() => scale(0, 0, 0)}>
+    <Button variant={"danger"} onClick={() => scale(0, 0, 0)}>
       Scale down
     </Button>
   ) : (
-    <Button variant={"outline-success"} onClick={() => scale(3, 3, 6)}>
+    <Button variant={"success"} onClick={() => scale(3, 3, 6)}>
       Scale up
     </Button>
   );
+}
+
+function aliveStatusColour(group: AutoScaling.AutoScalingGroup) {
+  return assessAlive(group) ? "lightgreen" : "palevioletred";
+}
+
+function loadingSpinner() {
+  return <Spinner animation="border" />;
 }
 
 export const TableRow = ({ groupProp }: TableRowProps) => {
@@ -42,13 +51,16 @@ export const TableRow = ({ groupProp }: TableRowProps) => {
     setTimeout(() => {
       setLoading(false);
       setGroup({ ...group, MinSize: min });
-    }, 1000);
+    }, 2000);
 
     console.log(group.MinSize);
   };
 
   return (
     <tr key={group.AutoScalingGroupName}>
+      <td style={{ width: "10%" }}>
+        {loading ? loadingSpinner() : scaleButton(group, scale)}
+      </td>
       <td>{getTagValue(group, "Stack")}</td>
       <td>{getTagValue(group, "Stage")}</td>
       <td>{group.AutoScalingGroupName}</td>
@@ -56,20 +68,9 @@ export const TableRow = ({ groupProp }: TableRowProps) => {
       <td>{group.DesiredCapacity}</td>
       <td>{group.MaxSize}</td>
       <td>
-        {assessAlive(group) ? (
-          <div style={{ color: "lightgreen" }}>Yes!</div>
-        ) : (
-          <div style={{ color: "palevioletred" }}>No.</div>
-        )}
-      </td>
-      <td>
-        {loading ? (
-          <Button disabled variant={"outline-danger"}>
-            Loading...
-          </Button>
-        ) : (
-          scaleButton(group, scale)
-        )}
+        <div style={{ color: aliveStatusColour(group) }}>
+          {assessAlive(group) ? "Yes" : "No"}
+        </div>
       </td>
     </tr>
   );
