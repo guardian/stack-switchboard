@@ -33,7 +33,7 @@ export const TableRow = ({ groupProp }: TableRowProps) => {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({ title: "", message: "" });
 
-  function setSuccessState() {
+  function setErrorState() {
     setLoading(false);
     setShowModal(true);
     setConfirmed(false);
@@ -43,7 +43,7 @@ export const TableRow = ({ groupProp }: TableRowProps) => {
     });
   }
 
-  function setErrorState(min: number, max: number, desired: number) {
+  function setSuccessState(min: number, max: number, desired: number) {
     setConfirmed(false);
     setLoading(false);
     setGroup({
@@ -74,9 +74,9 @@ export const TableRow = ({ groupProp }: TableRowProps) => {
     const result = await response.json();
 
     if (!result.success) {
-      setSuccessState();
+      setErrorState();
     } else {
-      setErrorState(min, max, desired);
+      setSuccessState(min, max, desired);
     }
   };
 
