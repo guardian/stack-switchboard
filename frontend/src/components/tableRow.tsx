@@ -19,11 +19,11 @@ function scaleButton(
   scale: (min: number, desired: number, max: number) => void
 ) {
   return assessAlive(group) ? (
-    <Button variant={"warning"} onClick={() => scale(0, 0, 0)}>
+    <Button variant={"outline-warning"} onClick={() => scale(0, 0, 0)}>
       Scale down
     </Button>
   ) : (
-    <Button variant={"primary"} onClick={() => scale(3, 3, 6)}>
+    <Button variant={"outline-success"} onClick={() => scale(3, 3, 6)}>
       Scale up
     </Button>
   );
@@ -37,11 +37,11 @@ export const TableRow = ({ groupProp }: TableRowProps) => {
     console.log("Scaling to: ", min, desired, max);
     // insert AWS stuff here
 
-    setGroup({ ...group, MinSize: min });
     setLoading(true);
 
     setTimeout(() => {
       setLoading(false);
+      setGroup({ ...group, MinSize: min });
     }, 1000);
 
     console.log(group.MinSize);
@@ -62,7 +62,15 @@ export const TableRow = ({ groupProp }: TableRowProps) => {
           <div style={{ color: "palevioletred" }}>No.</div>
         )}
       </td>
-      <td>{loading ? "Loading!" : scaleButton(group, scale)}</td>
+      <td>
+        {loading ? (
+          <Button disabled variant={"outline-danger"}>
+            Loading...
+          </Button>
+        ) : (
+          scaleButton(group, scale)
+        )}
+      </td>
     </tr>
   );
 };

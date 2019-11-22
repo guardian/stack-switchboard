@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 
 import { TableRow } from "./tableRow";
-import { fetchSwitchboardData } from "../utils/switchboardBuilder";
 import { EnrichedAutoScalingGroup } from "../utils/interfaces";
 
 export const SwitchboardTable: React.FC = () => {
@@ -10,14 +9,12 @@ export const SwitchboardTable: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      let data: EnrichedAutoScalingGroup[];
-      try {
-        data = await fetchSwitchboardData();
-      } catch (e) {
-        console.error(e);
-        data = [];
-      }
-      setData(data);
+      let switchboardData: { groups: EnrichedAutoScalingGroup[] } = {
+        groups: []
+      };
+      const response = await fetch("/api/switchboard");
+      switchboardData = await response.json();
+      setData(switchboardData.groups);
     })();
   }, []);
 
