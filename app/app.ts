@@ -1,14 +1,21 @@
 import express from "express";
 import awsServerlessExpress from "aws-serverless-express";
 import path from "path";
+import bodyParser from "body-parser";
+
 import { fetchSwitchboardData } from "./utils/switchboardBuilder";
 import { EnrichedAutoScalingGroup } from "./utils/interfaces";
+import { spinDownAutoScalingGroup } from "./utils/asgController";
+import AWS, { AutoScaling } from "aws-sdk";
 
 const app = express();
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 const port = process.env.PORT || 5000;
 
-app.use(express.static(path.join(__dirname, "/prod/build")));
+app.use(express.static(path.join(__dirname, "/build")));
 
 // TODO: Work out what to put instead of 'any'
 export const handler = (event: any, context: any) =>
@@ -23,8 +30,40 @@ app.get("/api/", async (req, res) => {
 });
 
 app.post("/api/scaledown", async (req, res) => {
+  let success: boolean;
+  const {
+    min,
+    max,
+    desired,
+    group
+  }: {
+    min: number;
+    max: number;
+    desired: number;
+    group: AutoScaling.AutoScalingGroup;
+  } = req.body;
+
+  const params = {
+    region: "eu-west-1"
+  };
+
+  const autoScaling = new AWS.AutoScaling(params);
+
+  try {
+    success = await spinDownAutoScalingGroup(
+      autoScaling,
+      group.AutoScalingGroupName,
+      { min, desired, max }
+    );
+  } catch (err) {
+    console.error(err);
+    success = false;
+  }
   res.json({
-    scaleup: false
+    success,
+    reqBody: {
+      body: req.body
+    }
   });
 });
 
@@ -52,7 +91,7 @@ app.get("/api/*", async (req, res) => {
 
 app.get("/*", (req, res) => {
   res.type("html");
-  res.sendFile(path.join(__dirname + "/prod/build/index.html"));
+  res.sendFile(path.join(__dirname + "/build/index.html"));
 });
 
 if (require.main === module) {

@@ -42,18 +42,25 @@ export const TableRow = ({ groupProp }: TableRowProps) => {
   const [group, setGroup] = useState(groupProp);
   const [loading, setLoading] = useState(false);
 
-  const scale = (min: number, desired: number, max: number) => {
-    console.log("Scaling to: ", min, desired, max);
-    // insert AWS stuff here
-
+  const scale = async (min: number, desired: number, max: number) => {
     setLoading(true);
+    console.log("Scaling to: ", min, desired, max);
 
-    setTimeout(() => {
-      setLoading(false);
-      setGroup({ ...group, MinSize: min });
-    }, 2000);
+    const response = await fetch("/api/scaledown", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ min, max, desired, group })
+    });
+    const result = await response.json();
 
-    console.log(group.MinSize);
+    if (result.success) {
+      console.error("Problems:", result);
+    }
+
+    setLoading(false);
+    setGroup({ ...group, MinSize: min });
   };
 
   return (
