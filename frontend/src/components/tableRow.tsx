@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Button, { ButtonProps } from "react-bootstrap/Button";
 import { AutoScalingGroup } from "aws-sdk/clients/autoscaling";
 import Spinner from "react-bootstrap/Spinner";
 
