@@ -9,17 +9,6 @@ deployments:
       bucket: stack-switchboard
       fileName: switchboard.zip
       functionNames: [stack-switchboard-]
-    frontend:
-      type: aws-s3
-      dependencies: [cloudformation]
-      parameters:
-        prefixStack: false
-        bucket: stack-switchboard
-        cacheControl: max-age=10
-        publicReadAcl: false
-        prefixPackage: false
-        mimeTypes:
-         json: application/json
   cloudformation:
     type: cloud-formation
     app: stack-switchboard

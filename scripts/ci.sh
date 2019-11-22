@@ -10,7 +10,6 @@ function build-react() {
     cd frontend
     yarn install
     yarn build
-    cp -R build ../app/
     cd -
 }
 
@@ -26,6 +25,8 @@ function build-resources() {
     rm -rf node_modules && yarn install
     yarn compile
     cp -R ../dist ./
+    cp -R ../frontend/build ./dist/build
+    ls -al dist/
     npx @guardian/node-riffraff-artifact
 }
 
