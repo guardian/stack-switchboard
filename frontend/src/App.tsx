@@ -3,10 +3,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 
-import { SwitchboardTable } from "./components/switchboardTable";
 import { CustomNav } from "./components/customNav";
-import { Index } from "./components";
-import { CentralProduction } from "./components/centralProduction";
+import { Index } from "./views";
+import { CentralProduction } from "./views/centralProduction";
+import { Switchboard } from "./views/switchboard";
+import { CLIENT_ENDPOINTS } from "./utils/values";
 
 const App: React.FC = () => {
   return (
@@ -14,10 +15,10 @@ const App: React.FC = () => {
       <div className="App">
         <CustomNav />
         <Switch>
-          <Route path="/switchboard">
-            <SwitchboardTable />
+          <Route path={CLIENT_ENDPOINTS.SWITCHBOARD}>
+            <Switchboard />
           </Route>
-          <Route path="/centralproduction">
+          <Route path={CLIENT_ENDPOINTS.CENTRAL_PROD}>
             <CentralProduction />
           </Route>
           <Route path="/">

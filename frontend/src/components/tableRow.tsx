@@ -5,7 +5,7 @@ import Spinner from "react-bootstrap/Spinner";
 
 import { ErrorModal } from "./errorModal";
 import { ScaleButton } from "./scaleButton";
-import { ENDPOINTS } from "../utils/values";
+import { API_ENDPOINTS } from "../utils/values";
 
 interface TableRowProps {
   groupProp: AutoScalingGroup;
@@ -64,7 +64,7 @@ export const TableRow = ({ groupProp }: TableRowProps) => {
     setShowModal(false);
     setLoading(true);
 
-    const response = await fetch(ENDPOINTS.SCALE, {
+    const response = await fetch(API_ENDPOINTS.SCALE, {
       method: "post",
       headers: {
         "Content-Type": "application/json"

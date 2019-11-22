@@ -4,7 +4,7 @@ import Table from "react-bootstrap/Table";
 import { TableRow } from "./tableRow";
 import { EnrichedAutoScalingGroup } from "../utils/interfaces";
 import Spinner from "react-bootstrap/Spinner";
-import { ENDPOINTS } from "../utils/values";
+import { API_ENDPOINTS } from "../utils/values";
 
 export const SwitchboardTable: React.FC = () => {
   const [data, setData] = useState([] as EnrichedAutoScalingGroup[]);
@@ -15,7 +15,7 @@ export const SwitchboardTable: React.FC = () => {
       let switchboardData: { groups: EnrichedAutoScalingGroup[] } = {
         groups: []
       };
-      const response = await fetch(ENDPOINTS.SWITCHBOARD_DATA);
+      const response = await fetch(API_ENDPOINTS.SWITCHBOARD_DATA);
       if (!response.ok) {
         console.error(response.statusText);
       } else {
