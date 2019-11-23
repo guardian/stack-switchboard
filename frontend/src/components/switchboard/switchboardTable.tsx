@@ -18,7 +18,7 @@ export const SwitchboardTable: React.FC = () => {
   const updateFilter = (contents: string) => {
     setData(
       data.map(row => {
-        if (row.name.toLowerCase().includes(contents)) {
+        if (row.name.toLowerCase().includes(contents.toLowerCase())) {
           return { ...row, hide: false };
         } else {
           return { ...row, hide: true };
