@@ -23,31 +23,23 @@ const scaleAutoScalingGroup = async (
   AutoScalingGroupName: string,
   { min, max, desired }: ASGState
 ): Promise<boolean> => {
-  if (
-    AutoScalingGroupName ===
-    "Flexible-Apps-Secondary-CODE-ComposerAutoscalingGroup-1IGJ3K04CQSLJ"
-  ) {
-    console.log(
-      `Scaling [${AutoScalingGroupName}] to [min: ${min}, desired: ${desired}, max: ${max}]`
+  console.log(
+    `Scaling [${AutoScalingGroupName}] to [min: ${min}, desired: ${desired}, max: ${max}]`
+  );
+  const result = await autoScalingClient
+    .updateAutoScalingGroup({
+      AutoScalingGroupName,
+      DesiredCapacity: desired,
+      MinSize: min,
+      MaxSize: max
+    })
+    .promise()
+    .catch(err =>
+      console.error(`Error in updating ASG ${AutoScalingGroupName}:`, err)
     );
-    const result = await autoScalingClient
-      .updateAutoScalingGroup({
-        AutoScalingGroupName,
-        DesiredCapacity: desired,
-        MinSize: min,
-        MaxSize: max
-      })
-      .promise()
-      .catch(err => console.error("Error:", err));
-    console.log(result);
-  } else {
-    console.log("would spin down ", AutoScalingGroupName, {
-      min,
-      max,
-      desired
-    });
-    return false;
-  }
+
+  console.log(result);
+
   return true;
 };
 
