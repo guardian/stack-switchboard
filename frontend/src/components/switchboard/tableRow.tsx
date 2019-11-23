@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { AutoScalingGroup } from "aws-sdk/clients/autoscaling";
 import Spinner from "react-bootstrap/Spinner";
 
-import { ErrorModal } from "./errorModal";
+import { CustomModal } from "../customModal";
 import { ScaleButton } from "./scaleButton";
-import { API_ENDPOINTS } from "../utils/values";
+import { API_ENDPOINTS } from "../../utils/values";
 
 interface TableRowProps {
   groupProp: AutoScalingGroup;
@@ -82,7 +82,7 @@ export const TableRow = ({ groupProp }: TableRowProps) => {
 
   return (
     <tr key={group.AutoScalingGroupName}>
-      {showModal ? <ErrorModal data={modalData} /> : ""}
+      {showModal ? <CustomModal data={modalData} /> : <></>}
       <td style={{ width: "10%", textAlign: "center" }}>
         {loading ? (
           <LoadingSpinner />

@@ -1,5 +1,5 @@
 import React from "react";
-import { SwitchboardTable } from "../components/switchboardTable";
+import { SwitchboardTable } from "../components/switchboard/switchboardTable";
 
 export const Switchboard = () => {
   return (
