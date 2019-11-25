@@ -29,12 +29,12 @@ export const SwitchboardTable: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      let switchboardData: { groups: Data[] } = {
-        groups: []
-      };
+      let switchboardData = { groups: [] };
       const response = await fetch(API_ENDPOINTS.SWITCHBOARD_DATA);
       if (!response.ok) {
-        console.error(response.statusText);
+        console.error(
+          `Error fetching switchboard data from ${API_ENDPOINTS.SWITCHBOARD_DATA}: ${response.statusText}`
+        );
       } else {
         switchboardData = await response.json();
         setData(switchboardData.groups);
@@ -60,7 +60,7 @@ export const SwitchboardTable: React.FC = () => {
           </tr>
         </thead>
         {loading ? (
-          <span
+          <tbody
             style={{
               marginTop: "30px",
               textAlign: "center",
@@ -69,7 +69,7 @@ export const SwitchboardTable: React.FC = () => {
             }}
           >
             <Spinner animation={"grow"} variant={"light"} />
-          </span>
+          </tbody>
         ) : (
           <tbody>
             {data

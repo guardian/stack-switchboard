@@ -66,12 +66,13 @@ app.get("/api/switchboard", async (req, res) => {
   let groups: EnrichedAutoScalingGroup[];
   try {
     groups = await fetchSwitchboardData();
+    res.json({ groups });
   } catch (err) {
     console.error(err);
     groups = [];
+    res.status(401);
+    res.json({ groups });
   }
-
-  res.json({ groups });
 });
 
 app.get("/api/*", async (req, res) => {
