@@ -25,8 +25,7 @@ function build-resources() {
     rm -rf node_modules && yarn install
     yarn compile
     cp -R ../dist ./
-    mkdir ./dist/prod/
-    cp -R ../frontend/build ./dist/prod/build
+    cp -R ../frontend/build ./dist/build
     ls -al dist/
     npx @guardian/node-riffraff-artifact
 }
