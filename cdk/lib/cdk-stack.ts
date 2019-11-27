@@ -1,6 +1,7 @@
 import cdk = require("@aws-cdk/core");
 import lambda = require("@aws-cdk/aws-lambda");
 import s3 = require("@aws-cdk/aws-s3");
+import iam = require("@aws-cdk/aws-iam");
 import apigateway = require("@aws-cdk/aws-apigateway");
 
 export class CdkStack extends cdk.Stack {
@@ -37,6 +38,12 @@ export class CdkStack extends cdk.Stack {
         description: "Switchboard for controlling CODE & secondary resources"
       }
     );
+
+    const statement = new iam.PolicyStatement();
+    statement.addActions("autoscaling:*");
+    statement.addResources("*");
+
+    switchboardLambda.addToRolePolicy(statement);
 
     new apigateway.LambdaRestApi(this, "stack-switchboard-api", {
       handler: switchboardLambda
