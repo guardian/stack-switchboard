@@ -49,7 +49,7 @@ export class CdkStack extends cdk.Stack {
 
     new apigateway.LambdaRestApi(this, "stack-switchboard-api", {
       handler: switchboardLambda,
-      description: `API for stack-switchboard lambda in ${stackParameter.valueAsString} env`
+      description: `API for stack-switchboard lambda in ${stageParameter.valueAsString} env`
     });
   }
 }
