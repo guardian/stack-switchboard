@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const port = process.env.PORT || 5000;
+const endpointPrefix = process.env.NODE_ENV === "development" ? "/prod" : "";
 
 app.use(express.static(path.join(__dirname, "/build")));
 
@@ -25,11 +26,11 @@ export const handler = (event: any, context: any) =>
     context
   );
 
-app.get("/api/", async (req, res) => {
+app.get(`${endpointPrefix}/api/`, async (req, res) => {
   res.json({});
 });
 
-app.post("/api/scale", async (req, res) => {
+app.post(`${endpointPrefix}/api/scale`, async (req, res) => {
   let success: boolean;
   const {
     min,
@@ -62,7 +63,7 @@ app.post("/api/scale", async (req, res) => {
   res.json({ success });
 });
 
-app.get("/api/switchboard", async (req, res) => {
+app.get(`${endpointPrefix}/api/switchboard`, async (req, res) => {
   let groups: EnrichedAutoScalingGroup[];
   try {
     groups = await fetchSwitchboardData();
@@ -75,7 +76,7 @@ app.get("/api/switchboard", async (req, res) => {
   }
 });
 
-app.get("/api/*", async (req, res) => {
+app.get(`${endpointPrefix}/api/*`, async (req, res) => {
   res.json({ api: true });
 });
 
