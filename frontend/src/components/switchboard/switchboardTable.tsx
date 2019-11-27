@@ -46,17 +46,14 @@ export const SwitchboardTable: React.FC = () => {
   return (
     <div>
       <SearchBar updateFilter={updateFilter} />
-      <Table variant={"dark"} striped hover responsive>
+      <Table variant={"dark"} striped hover responsive={"sm"}>
         <thead>
           <tr>
-            <th style={{ width: "30px" }}>Switch</th>
-            <th>CloudFormation Stack</th>
+            <th>Switch</th>
+            <th>Stack</th>
             <th>Stage</th>
             <th>ASG Name</th>
-            <th>Minimum Size</th>
-            <th>Desired Capacity</th>
-            <th>Maximum Size</th>
-            <th>Alive</th>
+            <th>State</th>
           </tr>
         </thead>
         {loading ? (

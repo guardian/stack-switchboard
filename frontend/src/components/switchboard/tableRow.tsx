@@ -5,6 +5,7 @@ import Spinner from "react-bootstrap/Spinner";
 import { CustomModal } from "../customModal";
 import { ScaleButton } from "./scaleButton";
 import { API_ENDPOINTS } from "../../utils/values";
+import Row from "react-bootstrap/Row";
 
 interface TableRowProps {
   groupProp: AutoScalingGroup;
@@ -98,13 +99,10 @@ export const TableRow = ({ groupProp }: TableRowProps) => {
       <td>{getTagValue(group, "Stack")}</td>
       <td>{getTagValue(group, "Stage")}</td>
       <td>{group.AutoScalingGroupName}</td>
-      <td>{group.MinSize}</td>
-      <td>{group.DesiredCapacity}</td>
-      <td>{group.MaxSize}</td>
-      <td>
-        <div style={{ color: aliveStatusColour(group), fontWeight: "bold" }}>
-          {assessAlive(group) ? "Yes" : "No"}
-        </div>
+      <td style={{ color: aliveStatusColour(group) }}>
+        <Row>{group.MinSize} Minimum</Row>
+        <Row>{group.DesiredCapacity} Desired</Row>
+        <Row>{group.MaxSize} Maximum</Row>
       </td>
     </tr>
   );
