@@ -2,6 +2,7 @@ import cdk = require("@aws-cdk/core");
 import lambda = require("@aws-cdk/aws-lambda");
 import s3 = require("@aws-cdk/aws-s3");
 import apigateway = require("@aws-cdk/aws-apigateway");
+import { Duration } from "@aws-cdk/core";
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -34,7 +35,9 @@ export class CdkStack extends cdk.Stack {
           deployBucket,
           `${stackParameter.valueAsString}/${stageParameter.valueAsString}/switchboard/switchboard.zip`
         ),
-        description: "Switchboard for controlling CODE & secondary resources"
+        description: "Switchboard for controlling CODE & secondary resources",
+        timeout: Duration.seconds(10),
+        memorySize: 512
       }
     );
 
