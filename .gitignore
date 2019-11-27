@@ -6,6 +6,8 @@ node_modules
 
 # generated package
 dist
+app/build
+frontend/build
 
 # generated from testing
 coverage
