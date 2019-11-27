@@ -25,11 +25,11 @@ export const handler = (event: any, context: any) =>
     context
   );
 
-app.get("/prod/api/", async (req, res) => {
+app.get("/api/", async (req, res) => {
   res.json({});
 });
 
-app.post("/prod/api/scale", async (req, res) => {
+app.post("/api/scale", async (req, res) => {
   let success: boolean;
   const {
     min,
@@ -62,7 +62,7 @@ app.post("/prod/api/scale", async (req, res) => {
   res.json({ success });
 });
 
-app.get("/prod/api/switchboard", async (req, res) => {
+app.get("/api/switchboard", async (req, res) => {
   let groups: EnrichedAutoScalingGroup[];
   try {
     groups = await fetchSwitchboardData();
@@ -75,7 +75,7 @@ app.get("/prod/api/switchboard", async (req, res) => {
   }
 });
 
-app.get("/prod/api/*", async (req, res) => {
+app.get("/api/*", async (req, res) => {
   res.json({ api: true });
 });
 
