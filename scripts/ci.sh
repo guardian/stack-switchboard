@@ -3,19 +3,19 @@
 set -ex
 
 function cleanup() {
-    rm -rf node_modules dist cdk/node_modules
+    rm -rf dist cdk/dist
 }
 
 function build-react() {
     cd frontend
-    yarn install
+    rm -rf node_modules && yarn install
     yarn build
     cd -
 }
 
 function build-app() {
     cd app
-    yarn install
+    rm -rf node_modules && yarn install
     yarn build
     cd -
 }
@@ -26,7 +26,6 @@ function build-resources() {
     yarn compile
     cp -R ../dist ./
     cp -R ../frontend/build ./dist/build
-    ls -al dist/
     npx @guardian/node-riffraff-artifact
 }
 
@@ -34,3 +33,4 @@ cleanup
 build-react
 build-app
 build-resources
+cleanup

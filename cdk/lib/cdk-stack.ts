@@ -37,7 +37,8 @@ export class CdkStack extends cdk.Stack {
           `${stackParameter.valueAsString}/${stageParameter.valueAsString}/switchboard/switchboard.zip`
         ),
         description: "Switchboard for controlling CODE & secondary resources",
-        timeout: Duration.seconds(15)
+        timeout: Duration.seconds(15),
+        memorySize: 512
       }
     );
 
