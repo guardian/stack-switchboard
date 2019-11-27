@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "AWS_PROFILE=composer && REACT_APP_AWS_PROFILE=composer react-scripts start",
-    "build": "react-scripts build",
+    "build": "PUBLIC_URL=\"/prod\" react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
