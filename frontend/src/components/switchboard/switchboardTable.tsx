@@ -30,7 +30,7 @@ export const SwitchboardTable: React.FC = () => {
   useEffect(() => {
     (async () => {
       let switchboardData = { groups: [] };
-      const response = await fetch("/prod" + API_ENDPOINTS.SWITCHBOARD_DATA);
+      const response = await fetch(API_ENDPOINTS.SWITCHBOARD_DATA);
       if (!response.ok) {
         console.error(
           `Error fetching switchboard data from ${API_ENDPOINTS.SWITCHBOARD_DATA}: ${response.statusText}`

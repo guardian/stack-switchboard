@@ -1,6 +1,6 @@
 export const API_ENDPOINTS = {
-  SCALE: "/api/scale",
-  SWITCHBOARD_DATA: "/api/switchboard"
+  SCALE: "/prod/api/scale",
+  SWITCHBOARD_DATA: "/prod/api/switchboard"
 };
 
 export const CLIENT_ENDPOINTS = {

@@ -63,7 +63,7 @@ export const TableRow = ({ groupProp }: TableRowProps) => {
     setShowModal(false);
     setLoading(true);
 
-    const response = await fetch("/prod" + API_ENDPOINTS.SCALE, {
+    const response = await fetch(API_ENDPOINTS.SCALE, {
       method: "post",
       headers: {
         "Content-Type": "application/json"
