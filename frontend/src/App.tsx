@@ -11,7 +11,7 @@ import { CLIENT_ENDPOINTS } from "./utils/values";
 
 const App: React.FC = () => {
   return (
-    <Router>
+    <Router basename={"/prod"}>
       <div className="App">
         <CustomNav />
         <Switch>
