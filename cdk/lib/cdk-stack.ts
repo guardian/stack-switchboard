@@ -3,6 +3,7 @@ import lambda = require("@aws-cdk/aws-lambda");
 import s3 = require("@aws-cdk/aws-s3");
 import iam = require("@aws-cdk/aws-iam");
 import apigateway = require("@aws-cdk/aws-apigateway");
+import { Duration } from "@aws-cdk/core";
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
