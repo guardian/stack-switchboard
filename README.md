@@ -2,8 +2,16 @@
 
 ## To run locally
 
+You'll need to spin up both `app` and `frontend` in separate terminals, which handle the API and React client respectively.
+
 ```bash
 $ cd app
+$ npm install
+$ npm start
+```
+```bash
+$ cd frontend
+$ npm install
 $ npm start
 ```
 
