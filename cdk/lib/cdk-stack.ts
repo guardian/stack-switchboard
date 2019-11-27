@@ -45,12 +45,9 @@ export class CdkStack extends cdk.Stack {
 
     switchboardLambda.addToRolePolicy(statement);
 
-    new apigateway.LambdaRestApi(
-      this,
-      `stack-switchboard-api-${stageParameter.valueAsString}`,
-      {
-        handler: switchboardLambda
-      }
-    );
+    new apigateway.LambdaRestApi(this, "stack-switchboard-api", {
+      handler: switchboardLambda,
+      description: `API for stack-switchboard lambda in ${stackParameter.valueAsString} env`
+    });
   }
 }
