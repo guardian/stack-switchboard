@@ -1,6 +1,11 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  useLocation
+} from "react-router-dom";
 import "./App.css";
 
 import { CustomNav } from "./components/customNav";
@@ -8,6 +13,18 @@ import { Index } from "./views";
 import { CentralProduction } from "./views/centralProduction";
 import { Switchboard } from "./views/switchboard";
 import { CLIENT_ENDPOINTS } from "./utils/values";
+
+const NoMatch = () => {
+  let location = useLocation();
+
+  return (
+    <div style={{ textAlign: "center" }}>
+      <h3>
+        404: No match for <code>{location.pathname}</code>
+      </h3>
+    </div>
+  );
+};
 
 const App: React.FC = () => {
   return (
@@ -21,8 +38,11 @@ const App: React.FC = () => {
           <Route path={CLIENT_ENDPOINTS.CENTRAL_PROD}>
             <CentralProduction />
           </Route>
-          <Route path="/">
+          <Route exact path="/">
             <Index />
+          </Route>
+          <Route path="/*">
+            <NoMatch />
           </Route>
         </Switch>
       </div>

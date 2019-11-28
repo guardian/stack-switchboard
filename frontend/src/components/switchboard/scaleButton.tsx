@@ -26,7 +26,7 @@ export const ScaleButton = ({
   }
 
   return (
-    <Button variant={confirm ? `outline-danger` : variant} onClick={onCLick}>
+    <Button variant={confirm ? `danger` : variant} onClick={onCLick}>
       {confirm ? "Are you sure?" : text}
     </Button>
   );
