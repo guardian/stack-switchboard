@@ -29,7 +29,9 @@ function desiredGroups(
   return group =>
     !!(
       group.AutoScalingGroupName.includes(stage || "") &&
-      whitelist.find(item => group.AutoScalingGroupName.includes(item))
+      (whitelist.length > 0
+        ? whitelist.find(item => group.AutoScalingGroupName.includes(item))
+        : true)
     );
 }
 
@@ -57,7 +59,7 @@ const getDesiredTags = (tags: AutoScaling.Tag[], desired: string[]) => {
 
 export const fetchSwitchboardData = async () => {
   const desiredTags = ["Stack", "Stage", "aws:cloudformation:stack-name"];
-  const groupWhitelist = ["flexible", "Flexible"];
+  const groupWhitelist: string[] = [];
 
   const autoscalingGroups = await getAutoScalingGroupState(autoScaling);
 
@@ -74,7 +76,7 @@ export const fetchSwitchboardData = async () => {
 };
 
 const fns = {
-  alphabeticallyByName,
+  alphabeticallyByName: alphabeticallyByName,
   desiredGroups,
   getDesiredTags,
   fetchSwitchboardData

@@ -5,11 +5,15 @@ import Spinner from "react-bootstrap/Spinner";
 import { CustomModal } from "../customModal";
 import { ScaleButton } from "./scaleButton";
 import { API_ENDPOINTS } from "../../utils/values";
-import Row from "react-bootstrap/Row";
+import { StateRow } from "./stateCell";
 
 interface TableRowProps {
   groupProp: AutoScalingGroup;
 }
+
+const tdStyle = {
+  verticalAlign: "middle"
+};
 
 const getTagValue = (group: AutoScalingGroup, key: string) => {
   return group.Tags ? group.Tags.filter(t => t.Key === key)[0].Value : "";
@@ -19,13 +23,21 @@ const assessAlive = (group: AutoScalingGroup): boolean => {
   return group.MinSize > 0;
 };
 
-function aliveStatusColour(group: AutoScalingGroup) {
-  return assessAlive(group) ? "lightgreen" : "palevioletred";
-}
-
 const LoadingSpinner = () => {
   return <Spinner animation="border" />;
 };
+
+const StyledTD = ({
+  id,
+  children
+}: {
+  id: string;
+  children: string | undefined;
+}) => (
+  <td id={id} style={tdStyle}>
+    {children}
+  </td>
+);
 
 export const TableRow = ({ groupProp }: TableRowProps) => {
   const [group, setGroup] = useState(groupProp);
@@ -82,9 +94,9 @@ export const TableRow = ({ groupProp }: TableRowProps) => {
   };
 
   return (
-    <tr key={group.AutoScalingGroupName}>
+    <tr id="switch" key={group.AutoScalingGroupName}>
       {showModal ? <CustomModal data={modalData} /> : <></>}
-      <td style={{ width: "10%", textAlign: "center" }}>
+      <td style={{ width: "10%", verticalAlign: "middle" }}>
         {loading ? (
           <LoadingSpinner />
         ) : (
@@ -96,14 +108,11 @@ export const TableRow = ({ groupProp }: TableRowProps) => {
           />
         )}
       </td>
-      <td>{getTagValue(group, "Stack")}</td>
-      <td>{getTagValue(group, "Stage")}</td>
-      <td>{group.AutoScalingGroupName}</td>
-      <td style={{ color: aliveStatusColour(group) }}>
-        <Row>{group.MinSize} Minimum</Row>
-        <Row>{group.DesiredCapacity} Desired</Row>
-        <Row>{group.MaxSize} Maximum</Row>
-      </td>
+      <StyledTD id="asg-name">{group.AutoScalingGroupName}</StyledTD>
+      <StyledTD id="stack">{getTagValue(group, "Stack")}</StyledTD>
+      <StyledTD id="stage">{getTagValue(group, "Stage")}</StyledTD>
+      <StyledTD id="app">{getTagValue(group, "App")}</StyledTD>
+      <StateRow assessAlive={assessAlive} group={group} />
     </tr>
   );
 };

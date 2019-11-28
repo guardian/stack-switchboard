@@ -50,9 +50,10 @@ export const SwitchboardTable: React.FC = () => {
         <thead>
           <tr>
             <th>Switch</th>
+            <th>ASG Name</th>
             <th>Stack</th>
             <th>Stage</th>
-            <th>ASG Name</th>
+            <th>App</th>
             <th>State</th>
           </tr>
         </thead>
