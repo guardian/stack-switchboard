@@ -40,5 +40,10 @@
     "react-bootstrap": "^1.0.0-beta.16",
     "react-router-dom": "latest"
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://localhost:5000",
+  "prettier": {
+    "tabWidth":2,
+    "singleQuote": false,
+    "semi": true
+  }
 }

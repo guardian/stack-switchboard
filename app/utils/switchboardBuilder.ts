@@ -76,7 +76,7 @@ export const fetchSwitchboardData = async () => {
 };
 
 const fns = {
-  alphabeticallyByName: alphabeticallyByName,
+  alphabeticallyByName,
   desiredGroups,
   getDesiredTags,
   fetchSwitchboardData
