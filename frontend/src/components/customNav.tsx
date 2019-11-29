@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { Link } from "react-router-dom";
+import {CLIENT_ENDPOINTS} from "../utils/values";
 
 export const CustomNav = () => {
   return (
@@ -13,10 +14,13 @@ export const CustomNav = () => {
           <Link component={Nav.Link} to={"/"}>
             Home
           </Link>
-          <Link component={Nav.Link} to={"/switchboard"}>
-            Switchboard
+          <Link component={Nav.Link} to={CLIENT_ENDPOINTS.SWITCHBOARD}>
+            Autoscaling Groups
           </Link>
-          <Link component={Nav.Link} to={"/centralproduction"}>
+          <Link component={Nav.Link} to={"/stacks"}>
+            Stacks
+          </Link>
+          <Link component={Nav.Link} to={CLIENT_ENDPOINTS.CENTRAL_PROD}>
             Central Production
           </Link>
         </Nav>
