@@ -4,6 +4,8 @@ export const API_ENDPOINTS = {
 };
 
 export const CLIENT_ENDPOINTS = {
-  SWITCHBOARD: "/switchboard",
-  CENTRAL_PROD: "/centralproduction"
+  AUTOSCALING_GROUPS: "/autoscalinggroups",
+  CENTRAL_PROD: "/centralproduction",
+  STACKS: "/stacks",
+  HOME: "/"
 };

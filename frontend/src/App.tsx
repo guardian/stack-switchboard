@@ -13,6 +13,7 @@ import { Index } from "./views";
 import { CentralProduction } from "./views/centralProduction";
 import { Switchboard } from "./views/switchboard";
 import { CLIENT_ENDPOINTS } from "./utils/values";
+import { Stacks } from "./views/stacks";
 
 const NoMatch = () => {
   let location = useLocation();
@@ -32,11 +33,14 @@ const App: React.FC = () => {
       <div className="App">
         <CustomNav />
         <Switch>
-          <Route path={CLIENT_ENDPOINTS.SWITCHBOARD}>
+          <Route path={CLIENT_ENDPOINTS.AUTOSCALING_GROUPS}>
             <Switchboard />
           </Route>
           <Route path={CLIENT_ENDPOINTS.CENTRAL_PROD}>
             <CentralProduction />
+          </Route>
+          <Route path={CLIENT_ENDPOINTS.STACKS}>
+            <Stacks />
           </Route>
           <Route exact path="/">
             <Index />
