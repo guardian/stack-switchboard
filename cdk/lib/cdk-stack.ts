@@ -56,7 +56,7 @@ export class CdkStack extends cdk.Stack {
       principals: [new AnyPrincipal()],
       actions: ["execute-api:Invoke"],
       resources: [`execute-api:/${cdk.Aws.REGION}/*`],
-      conditions: [{ IpAddress: { "aws:SourceIp": [officeIP] } }]
+      conditions: { IpAddress: { "aws:SourceIp": [officeIP] } }
     });
 
     const denyAllOtherIPs: PolicyStatement = new iam.PolicyStatement({
