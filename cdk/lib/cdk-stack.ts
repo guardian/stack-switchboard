@@ -55,7 +55,7 @@ export class CdkStack extends cdk.Stack {
       effect: Effect.ALLOW,
       principals: [new AnyPrincipal()],
       actions: ["execute-api:Invoke"],
-      resources: [`execute-api:/${cdk.Aws.REGION}/*`],
+      resources: [`execute-api:/*/*/*`],
       conditions: { IpAddress: { "aws:SourceIp": [officeIP] } }
     });
 
@@ -63,7 +63,7 @@ export class CdkStack extends cdk.Stack {
       effect: Effect.DENY,
       principals: [new AnyPrincipal()],
       actions: ["execute-api:Invoke"],
-      resources: [`execute-api:/${cdk.Aws.REGION}/*`]
+      resources: [`execute-api:/*/*/*`]
     });
 
     new apigateway.LambdaRestApi(this, "stack-switchboard-api", {
