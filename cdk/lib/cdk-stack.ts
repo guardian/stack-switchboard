@@ -4,10 +4,13 @@ import s3 = require("@aws-cdk/aws-s3");
 import iam = require("@aws-cdk/aws-iam");
 import apigateway = require("@aws-cdk/aws-apigateway");
 import { Duration } from "@aws-cdk/core";
+import { AnyPrincipal, Effect, PolicyStatement } from "@aws-cdk/aws-iam";
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    const officeIP = "77.91.248.0/21";
 
     const deployBucket = s3.Bucket.fromBucketName(
       this,
@@ -48,9 +51,27 @@ export class CdkStack extends cdk.Stack {
 
     switchboardLambda.addToRolePolicy(statement);
 
+    const allowOfficeIPs: PolicyStatement = new iam.PolicyStatement({
+      effect: Effect.ALLOW,
+      principals: [new AnyPrincipal()],
+      actions: ["execute-api:Invoke"],
+      resources: [`execute-api:/${cdk.Aws.REGION}/*`],
+      conditions: [{ IpAddress: { "aws:SourceIp": [officeIP] } }]
+    });
+
+    const denyAllOtherIPs: PolicyStatement = new iam.PolicyStatement({
+      effect: Effect.DENY,
+      principals: [new AnyPrincipal()],
+      actions: ["execute-api:Invoke"],
+      resources: [`execute-api:/${cdk.Aws.REGION}/*`]
+    });
+
     new apigateway.LambdaRestApi(this, "stack-switchboard-api", {
       handler: switchboardLambda,
-      description: `API for stack-switchboard lambda in ${stageParameter.valueAsString} env`
+      description: `API for stack-switchboard lambda in ${stageParameter.valueAsString} env`,
+      policy: new iam.PolicyDocument({
+        statements: [allowOfficeIPs, denyAllOtherIPs]
+      })
     });
   }
 }
